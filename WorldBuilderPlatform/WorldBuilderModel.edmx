@@ -1,0 +1,1220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WorldBuilderPlatformDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="album_id" />
+          </Key>
+          <Property Name="album_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CharacterRelationship">
+          <Key>
+            <PropertyRef Name="relationship_id" />
+          </Key>
+          <Property Name="relationship_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="character_id_1" Type="int" Nullable="false" />
+          <Property Name="character_id_2" Type="int" Nullable="false" />
+          <Property Name="relation_type" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Characters">
+          <Key>
+            <PropertyRef Name="character_id" />
+          </Key>
+          <Property Name="character_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="gender" Type="nvarchar" MaxLength="30" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="main_img_url" Type="nvarchar" MaxLength="500" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+          <Property Name="species_id" Type="int" />
+        </EntityType>
+        <EntityType Name="CharacterStorySegment">
+          <Key>
+            <PropertyRef Name="character_id" />
+            <PropertyRef Name="segment_id" />
+          </Key>
+          <Property Name="character_id" Type="int" Nullable="false" />
+          <Property Name="segment_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FavoriteUniverse">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="universe_id" />
+          </Key>
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="main_img_url" Type="nvarchar" MaxLength="500" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="review_id" />
+          </Key>
+          <Property Name="review_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="text" Type="nvarchar(max)" />
+          <Property Name="rating" Type="tinyint" Nullable="false" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="user_id" Type="int" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="species_id" />
+          </Key>
+          <Property Name="species_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="StorySegment">
+          <Key>
+            <PropertyRef Name="segment_id" />
+          </Key>
+          <Property Name="segment_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="content" Type="nvarchar(max)" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="order_index" Type="int" Nullable="false" />
+          <Property Name="universe_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StorySegmentLocation">
+          <Key>
+            <PropertyRef Name="segment_id" />
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="segment_id" Type="int" Nullable="false" />
+          <Property Name="location_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StorySegmentWorldImage">
+          <Key>
+            <PropertyRef Name="segment_id" />
+            <PropertyRef Name="image_id" />
+          </Key>
+          <Property Name="segment_id" Type="int" Nullable="false" />
+          <Property Name="image_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="tag_id" />
+          </Key>
+          <Property Name="tag_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Universe">
+          <Key>
+            <PropertyRef Name="universe_id" />
+          </Key>
+          <Property Name="universe_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="visibility" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="cover_img_url" Type="nvarchar" MaxLength="500" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="owner_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UniverseTag">
+          <Key>
+            <PropertyRef Name="universe_id" />
+            <PropertyRef Name="tag_id" />
+          </Key>
+          <Property Name="universe_id" Type="int" Nullable="false" />
+          <Property Name="tag_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="password_hash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="role_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorldImage">
+          <Key>
+            <PropertyRef Name="image_id" />
+          </Key>
+          <Property Name="image_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="img_url" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="created_at" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="album_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Album__universe___70DDC3D8">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Album" Type="Self.Album" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Album">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__chara__59063A47">
+          <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+          <End Role="CharacterRelationship" Type="Self.CharacterRelationship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Characters">
+              <PropertyRef Name="character_id" />
+            </Principal>
+            <Dependent Role="CharacterRelationship">
+              <PropertyRef Name="character_id_1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__chara__59FA5E80">
+          <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+          <End Role="CharacterRelationship" Type="Self.CharacterRelationship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Characters">
+              <PropertyRef Name="character_id" />
+            </Principal>
+            <Dependent Role="CharacterRelationship">
+              <PropertyRef Name="character_id_2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__chara__619B8048">
+          <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+          <End Role="CharacterStorySegment" Type="Self.CharacterStorySegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Characters">
+              <PropertyRef Name="character_id" />
+            </Principal>
+            <Dependent Role="CharacterStorySegment">
+              <PropertyRef Name="character_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__segme__628FA481">
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="1" />
+          <End Role="CharacterStorySegment" Type="Self.CharacterStorySegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StorySegment">
+              <PropertyRef Name="segment_id" />
+            </Principal>
+            <Dependent Role="CharacterStorySegment">
+              <PropertyRef Name="segment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__speci__5535A963">
+          <End Role="Species" Type="Self.Species" Multiplicity="0..1" />
+          <End Role="Characters" Type="Self.Characters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="species_id" />
+            </Principal>
+            <Dependent Role="Characters">
+              <PropertyRef Name="species_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__unive__5441852A">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Characters" Type="Self.Characters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Characters">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FavoriteU__unive__7D439ABD">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="FavoriteUniverse" Type="Self.FavoriteUniverse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="FavoriteUniverse">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FavoriteU__user___7C4F7684">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="FavoriteUniverse" Type="Self.FavoriteUniverse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="FavoriteUniverse">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Location__univer__5070F446">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Review__universe__6D0D32F4">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Review__user_id__6C190EBB">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Species__univers__4CA06362">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Species" Type="Self.Species" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Species">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__image__787EE5A0">
+          <End Role="WorldImage" Type="Self.WorldImage" Multiplicity="1" />
+          <End Role="StorySegmentWorldImage" Type="Self.StorySegmentWorldImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorldImage">
+              <PropertyRef Name="image_id" />
+            </Principal>
+            <Dependent Role="StorySegmentWorldImage">
+              <PropertyRef Name="image_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__locat__66603565">
+          <End Role="Location" Type="Self.Location" Multiplicity="1" />
+          <End Role="StorySegmentLocation" Type="Self.StorySegmentLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="StorySegmentLocation">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__segme__656C112C">
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="1" />
+          <End Role="StorySegmentLocation" Type="Self.StorySegmentLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StorySegment">
+              <PropertyRef Name="segment_id" />
+            </Principal>
+            <Dependent Role="StorySegmentLocation">
+              <PropertyRef Name="segment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__segme__778AC167">
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="1" />
+          <End Role="StorySegmentWorldImage" Type="Self.StorySegmentWorldImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StorySegment">
+              <PropertyRef Name="segment_id" />
+            </Principal>
+            <Dependent Role="StorySegmentWorldImage">
+              <PropertyRef Name="segment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__unive__5EBF139D">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="StorySegment">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Universe__owner___4316F928">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Universe" Type="Self.Universe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Universe">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UniverseT__tag_i__49C3F6B7">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="1" />
+          <End Role="UniverseTag" Type="Self.UniverseTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="tag_id" />
+            </Principal>
+            <Dependent Role="UniverseTag">
+              <PropertyRef Name="tag_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UniverseT__unive__48CFD27E">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="UniverseTag" Type="Self.UniverseTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="UniverseTag">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Users__role_id__3D5E1FD2">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorldImag__album__74AE54BC">
+          <End Role="Album" Type="Self.Album" Multiplicity="1" />
+          <End Role="WorldImage" Type="Self.WorldImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="album_id" />
+            </Principal>
+            <Dependent Role="WorldImage">
+              <PropertyRef Name="album_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WorldBuilderPlatformDBModelStoreContainer">
+          <EntitySet Name="Album" EntityType="Self.Album" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CharacterRelationship" EntityType="Self.CharacterRelationship" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Characters" EntityType="Self.Characters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CharacterStorySegment" EntityType="Self.CharacterStorySegment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FavoriteUniverse" EntityType="Self.FavoriteUniverse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Review" EntityType="Self.Review" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Species" EntityType="Self.Species" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StorySegment" EntityType="Self.StorySegment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StorySegmentLocation" EntityType="Self.StorySegmentLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StorySegmentWorldImage" EntityType="Self.StorySegmentWorldImage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Universe" EntityType="Self.Universe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UniverseTag" EntityType="Self.UniverseTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorldImage" EntityType="Self.WorldImage" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Album__universe___70DDC3D8" Association="Self.FK__Album__universe___70DDC3D8">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="Album" EntitySet="Album" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__chara__59063A47" Association="Self.FK__Character__chara__59063A47">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="CharacterRelationship" EntitySet="CharacterRelationship" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__chara__59FA5E80" Association="Self.FK__Character__chara__59FA5E80">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="CharacterRelationship" EntitySet="CharacterRelationship" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__chara__619B8048" Association="Self.FK__Character__chara__619B8048">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="CharacterStorySegment" EntitySet="CharacterStorySegment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__segme__628FA481" Association="Self.FK__Character__segme__628FA481">
+            <End Role="StorySegment" EntitySet="StorySegment" />
+            <End Role="CharacterStorySegment" EntitySet="CharacterStorySegment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__speci__5535A963" Association="Self.FK__Character__speci__5535A963">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="Characters" EntitySet="Characters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__unive__5441852A" Association="Self.FK__Character__unive__5441852A">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="Characters" EntitySet="Characters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FavoriteU__unive__7D439ABD" Association="Self.FK__FavoriteU__unive__7D439ABD">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="FavoriteUniverse" EntitySet="FavoriteUniverse" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FavoriteU__user___7C4F7684" Association="Self.FK__FavoriteU__user___7C4F7684">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="FavoriteUniverse" EntitySet="FavoriteUniverse" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Location__univer__5070F446" Association="Self.FK__Location__univer__5070F446">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="Location" EntitySet="Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Review__universe__6D0D32F4" Association="Self.FK__Review__universe__6D0D32F4">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="Review" EntitySet="Review" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Review__user_id__6C190EBB" Association="Self.FK__Review__user_id__6C190EBB">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Review" EntitySet="Review" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Species__univers__4CA06362" Association="Self.FK__Species__univers__4CA06362">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="Species" EntitySet="Species" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__image__787EE5A0" Association="Self.FK__StorySegm__image__787EE5A0">
+            <End Role="WorldImage" EntitySet="WorldImage" />
+            <End Role="StorySegmentWorldImage" EntitySet="StorySegmentWorldImage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__locat__66603565" Association="Self.FK__StorySegm__locat__66603565">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="StorySegmentLocation" EntitySet="StorySegmentLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__segme__656C112C" Association="Self.FK__StorySegm__segme__656C112C">
+            <End Role="StorySegment" EntitySet="StorySegment" />
+            <End Role="StorySegmentLocation" EntitySet="StorySegmentLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__segme__778AC167" Association="Self.FK__StorySegm__segme__778AC167">
+            <End Role="StorySegment" EntitySet="StorySegment" />
+            <End Role="StorySegmentWorldImage" EntitySet="StorySegmentWorldImage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__unive__5EBF139D" Association="Self.FK__StorySegm__unive__5EBF139D">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="StorySegment" EntitySet="StorySegment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Universe__owner___4316F928" Association="Self.FK__Universe__owner___4316F928">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Universe" EntitySet="Universe" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UniverseT__tag_i__49C3F6B7" Association="Self.FK__UniverseT__tag_i__49C3F6B7">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="UniverseTag" EntitySet="UniverseTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UniverseT__unive__48CFD27E" Association="Self.FK__UniverseT__unive__48CFD27E">
+            <End Role="Universe" EntitySet="Universe" />
+            <End Role="UniverseTag" EntitySet="UniverseTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Users__role_id__3D5E1FD2" Association="Self.FK__Users__role_id__3D5E1FD2">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorldImag__album__74AE54BC" Association="Self.FK__WorldImag__album__74AE54BC">
+            <End Role="Album" EntitySet="Album" />
+            <End Role="WorldImage" EntitySet="WorldImage" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WorldBuilderPlatformDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="album_id" />
+          </Key>
+          <Property Name="album_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__Album__universe___70DDC3D8" FromRole="Album" ToRole="Universe" />
+          <NavigationProperty Name="WorldImages" Relationship="Self.FK__WorldImag__album__74AE54BC" FromRole="Album" ToRole="WorldImage" />
+        </EntityType>
+        <EntityType Name="CharacterRelationship">
+          <Key>
+            <PropertyRef Name="relationship_id" />
+          </Key>
+          <Property Name="relationship_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="character_id_1" Type="Int32" Nullable="false" />
+          <Property Name="character_id_2" Type="Int32" Nullable="false" />
+          <Property Name="relation_type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Character" Relationship="Self.FK__Character__chara__59063A47" FromRole="CharacterRelationship" ToRole="Characters" />
+          <NavigationProperty Name="Character1" Relationship="Self.FK__Character__chara__59FA5E80" FromRole="CharacterRelationship" ToRole="Characters" />
+        </EntityType>
+        <EntityType Name="Character">
+          <Key>
+            <PropertyRef Name="character_id" />
+          </Key>
+          <Property Name="character_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="gender" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="main_img_url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <Property Name="species_id" Type="Int32" />
+          <NavigationProperty Name="CharacterRelationships" Relationship="Self.FK__Character__chara__59063A47" FromRole="Characters" ToRole="CharacterRelationship" />
+          <NavigationProperty Name="CharacterRelationships1" Relationship="Self.FK__Character__chara__59FA5E80" FromRole="Characters" ToRole="CharacterRelationship" />
+          <NavigationProperty Name="Species" Relationship="Self.FK__Character__speci__5535A963" FromRole="Characters" ToRole="Species" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__Character__unive__5441852A" FromRole="Characters" ToRole="Universe" />
+          <NavigationProperty Name="StorySegments" Relationship="Self.CharacterStorySegment" FromRole="Characters" ToRole="StorySegment" />
+        </EntityType>
+        <EntityType Name="FavoriteUniverse">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="universe_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__FavoriteU__unive__7D439ABD" FromRole="FavoriteUniverse" ToRole="Universe" />
+          <NavigationProperty Name="User" Relationship="Self.FK__FavoriteU__user___7C4F7684" FromRole="FavoriteUniverse" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="main_img_url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__Location__univer__5070F446" FromRole="Location" ToRole="Universe" />
+          <NavigationProperty Name="StorySegments" Relationship="Self.StorySegmentLocation" FromRole="Location" ToRole="StorySegment" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="review_id" />
+          </Key>
+          <Property Name="review_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="rating" Type="Byte" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__Review__universe__6D0D32F4" FromRole="Review" ToRole="Universe" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Review__user_id__6C190EBB" FromRole="Review" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="role_id" />
+          </Key>
+          <Property Name="role_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Users__role_id__3D5E1FD2" FromRole="Role" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="species_id" />
+          </Key>
+          <Property Name="species_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Characters" Relationship="Self.FK__Character__speci__5535A963" FromRole="Species" ToRole="Characters" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__Species__univers__4CA06362" FromRole="Species" ToRole="Universe" />
+        </EntityType>
+        <EntityType Name="StorySegment">
+          <Key>
+            <PropertyRef Name="segment_id" />
+          </Key>
+          <Property Name="segment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="order_index" Type="Int32" Nullable="false" />
+          <Property Name="universe_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Universe" Relationship="Self.FK__StorySegm__unive__5EBF139D" FromRole="StorySegment" ToRole="Universe" />
+          <NavigationProperty Name="Characters" Relationship="Self.CharacterStorySegment" FromRole="StorySegment" ToRole="Characters" />
+          <NavigationProperty Name="Locations" Relationship="Self.StorySegmentLocation" FromRole="StorySegment" ToRole="Location" />
+          <NavigationProperty Name="WorldImages" Relationship="Self.StorySegmentWorldImage" FromRole="StorySegment" ToRole="WorldImage" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="tag_id" />
+          </Key>
+          <Property Name="tag_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Universes" Relationship="Self.UniverseTag" FromRole="Tag" ToRole="Universe" />
+        </EntityType>
+        <EntityType Name="Universe">
+          <Key>
+            <PropertyRef Name="universe_id" />
+          </Key>
+          <Property Name="universe_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="visibility" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="cover_img_url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="owner_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Albums" Relationship="Self.FK__Album__universe___70DDC3D8" FromRole="Universe" ToRole="Album" />
+          <NavigationProperty Name="Characters" Relationship="Self.FK__Character__unive__5441852A" FromRole="Universe" ToRole="Characters" />
+          <NavigationProperty Name="FavoriteUniverses" Relationship="Self.FK__FavoriteU__unive__7D439ABD" FromRole="Universe" ToRole="FavoriteUniverse" />
+          <NavigationProperty Name="Locations" Relationship="Self.FK__Location__univer__5070F446" FromRole="Universe" ToRole="Location" />
+          <NavigationProperty Name="Reviews" Relationship="Self.FK__Review__universe__6D0D32F4" FromRole="Universe" ToRole="Review" />
+          <NavigationProperty Name="Species" Relationship="Self.FK__Species__univers__4CA06362" FromRole="Universe" ToRole="Species" />
+          <NavigationProperty Name="StorySegments" Relationship="Self.FK__StorySegm__unive__5EBF139D" FromRole="Universe" ToRole="StorySegment" />
+          <NavigationProperty Name="User" Relationship="Self.FK__Universe__owner___4316F928" FromRole="Universe" ToRole="Users" />
+          <NavigationProperty Name="Tags" Relationship="Self.UniverseTag" FromRole="Universe" ToRole="Tag" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="role_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FavoriteUniverses" Relationship="Self.FK__FavoriteU__user___7C4F7684" FromRole="Users" ToRole="FavoriteUniverse" />
+          <NavigationProperty Name="Reviews" Relationship="Self.FK__Review__user_id__6C190EBB" FromRole="Users" ToRole="Review" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__Users__role_id__3D5E1FD2" FromRole="Users" ToRole="Role" />
+          <NavigationProperty Name="Universes" Relationship="Self.FK__Universe__owner___4316F928" FromRole="Users" ToRole="Universe" />
+        </EntityType>
+        <EntityType Name="WorldImage">
+          <Key>
+            <PropertyRef Name="image_id" />
+          </Key>
+          <Property Name="image_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="img_url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="album_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Album" Relationship="Self.FK__WorldImag__album__74AE54BC" FromRole="WorldImage" ToRole="Album" />
+          <NavigationProperty Name="StorySegments" Relationship="Self.StorySegmentWorldImage" FromRole="WorldImage" ToRole="StorySegment" />
+        </EntityType>
+        <Association Name="FK__Album__universe___70DDC3D8">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Album" Type="Self.Album" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Album">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorldImag__album__74AE54BC">
+          <End Role="Album" Type="Self.Album" Multiplicity="1" />
+          <End Role="WorldImage" Type="Self.WorldImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="album_id" />
+            </Principal>
+            <Dependent Role="WorldImage">
+              <PropertyRef Name="album_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__chara__59063A47">
+          <End Role="Characters" Type="Self.Character" Multiplicity="1" />
+          <End Role="CharacterRelationship" Type="Self.CharacterRelationship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Characters">
+              <PropertyRef Name="character_id" />
+            </Principal>
+            <Dependent Role="CharacterRelationship">
+              <PropertyRef Name="character_id_1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__chara__59FA5E80">
+          <End Role="Characters" Type="Self.Character" Multiplicity="1" />
+          <End Role="CharacterRelationship" Type="Self.CharacterRelationship" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Characters">
+              <PropertyRef Name="character_id" />
+            </Principal>
+            <Dependent Role="CharacterRelationship">
+              <PropertyRef Name="character_id_2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__speci__5535A963">
+          <End Role="Species" Type="Self.Species" Multiplicity="0..1" />
+          <End Role="Characters" Type="Self.Character" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="species_id" />
+            </Principal>
+            <Dependent Role="Characters">
+              <PropertyRef Name="species_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Character__unive__5441852A">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Characters" Type="Self.Character" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Characters">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FavoriteU__unive__7D439ABD">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="FavoriteUniverse" Type="Self.FavoriteUniverse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="FavoriteUniverse">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FavoriteU__user___7C4F7684">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="FavoriteUniverse" Type="Self.FavoriteUniverse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="FavoriteUniverse">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Location__univer__5070F446">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Location">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Review__universe__6D0D32F4">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Review__user_id__6C190EBB">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Review" Type="Self.Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Users__role_id__3D5E1FD2">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="role_id" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="role_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Species__univers__4CA06362">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="Species" Type="Self.Species" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="Species">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StorySegm__unive__5EBF139D">
+          <End Role="Universe" Type="Self.Universe" Multiplicity="1" />
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Universe">
+              <PropertyRef Name="universe_id" />
+            </Principal>
+            <Dependent Role="StorySegment">
+              <PropertyRef Name="universe_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Universe__owner___4316F928">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Universe" Type="Self.Universe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Universe">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CharacterStorySegment">
+          <End Role="Characters" Type="Self.Character" Multiplicity="*" />
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="*" />
+        </Association>
+        <Association Name="StorySegmentLocation">
+          <End Role="Location" Type="Self.Location" Multiplicity="*" />
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="*" />
+        </Association>
+        <Association Name="StorySegmentWorldImage">
+          <End Role="WorldImage" Type="Self.WorldImage" Multiplicity="*" />
+          <End Role="StorySegment" Type="Self.StorySegment" Multiplicity="*" />
+        </Association>
+        <Association Name="UniverseTag">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="*" />
+          <End Role="Universe" Type="Self.Universe" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="WorldBuilderPlatformDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Albums" EntityType="Self.Album" />
+          <EntitySet Name="CharacterRelationships" EntityType="Self.CharacterRelationship" />
+          <EntitySet Name="Characters" EntityType="Self.Character" />
+          <EntitySet Name="FavoriteUniverses" EntityType="Self.FavoriteUniverse" />
+          <EntitySet Name="Locations" EntityType="Self.Location" />
+          <EntitySet Name="Reviews" EntityType="Self.Review" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Species" EntityType="Self.Species" />
+          <EntitySet Name="StorySegments" EntityType="Self.StorySegment" />
+          <EntitySet Name="Tags" EntityType="Self.Tag" />
+          <EntitySet Name="Universes" EntityType="Self.Universe" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="WorldImages" EntityType="Self.WorldImage" />
+          <AssociationSet Name="FK__Album__universe___70DDC3D8" Association="Self.FK__Album__universe___70DDC3D8">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="Album" EntitySet="Albums" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorldImag__album__74AE54BC" Association="Self.FK__WorldImag__album__74AE54BC">
+            <End Role="Album" EntitySet="Albums" />
+            <End Role="WorldImage" EntitySet="WorldImages" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__chara__59063A47" Association="Self.FK__Character__chara__59063A47">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="CharacterRelationship" EntitySet="CharacterRelationships" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__chara__59FA5E80" Association="Self.FK__Character__chara__59FA5E80">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="CharacterRelationship" EntitySet="CharacterRelationships" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__speci__5535A963" Association="Self.FK__Character__speci__5535A963">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="Characters" EntitySet="Characters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Character__unive__5441852A" Association="Self.FK__Character__unive__5441852A">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="Characters" EntitySet="Characters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FavoriteU__unive__7D439ABD" Association="Self.FK__FavoriteU__unive__7D439ABD">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="FavoriteUniverse" EntitySet="FavoriteUniverses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FavoriteU__user___7C4F7684" Association="Self.FK__FavoriteU__user___7C4F7684">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="FavoriteUniverse" EntitySet="FavoriteUniverses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Location__univer__5070F446" Association="Self.FK__Location__univer__5070F446">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="Location" EntitySet="Locations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Review__universe__6D0D32F4" Association="Self.FK__Review__universe__6D0D32F4">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="Review" EntitySet="Reviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Review__user_id__6C190EBB" Association="Self.FK__Review__user_id__6C190EBB">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Review" EntitySet="Reviews" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Users__role_id__3D5E1FD2" Association="Self.FK__Users__role_id__3D5E1FD2">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Species__univers__4CA06362" Association="Self.FK__Species__univers__4CA06362">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="Species" EntitySet="Species" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StorySegm__unive__5EBF139D" Association="Self.FK__StorySegm__unive__5EBF139D">
+            <End Role="Universe" EntitySet="Universes" />
+            <End Role="StorySegment" EntitySet="StorySegments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Universe__owner___4316F928" Association="Self.FK__Universe__owner___4316F928">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Universe" EntitySet="Universes" />
+          </AssociationSet>
+          <AssociationSet Name="CharacterStorySegment" Association="Self.CharacterStorySegment">
+            <End Role="Characters" EntitySet="Characters" />
+            <End Role="StorySegment" EntitySet="StorySegments" />
+          </AssociationSet>
+          <AssociationSet Name="StorySegmentLocation" Association="Self.StorySegmentLocation">
+            <End Role="Location" EntitySet="Locations" />
+            <End Role="StorySegment" EntitySet="StorySegments" />
+          </AssociationSet>
+          <AssociationSet Name="StorySegmentWorldImage" Association="Self.StorySegmentWorldImage">
+            <End Role="WorldImage" EntitySet="WorldImages" />
+            <End Role="StorySegment" EntitySet="StorySegments" />
+          </AssociationSet>
+          <AssociationSet Name="UniverseTag" Association="Self.UniverseTag">
+            <End Role="Tag" EntitySet="Tags" />
+            <End Role="Universe" EntitySet="Universes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WorldBuilderPlatformDBModelStoreContainer" CdmEntityContainer="WorldBuilderPlatformDBEntities">
+          <EntitySetMapping Name="Albums">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Album">
+              <MappingFragment StoreEntitySet="Album">
+                <ScalarProperty Name="album_id" ColumnName="album_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CharacterRelationships">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.CharacterRelationship">
+              <MappingFragment StoreEntitySet="CharacterRelationship">
+                <ScalarProperty Name="relationship_id" ColumnName="relationship_id" />
+                <ScalarProperty Name="character_id_1" ColumnName="character_id_1" />
+                <ScalarProperty Name="character_id_2" ColumnName="character_id_2" />
+                <ScalarProperty Name="relation_type" ColumnName="relation_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Characters">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Character">
+              <MappingFragment StoreEntitySet="Characters">
+                <ScalarProperty Name="character_id" ColumnName="character_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="main_img_url" ColumnName="main_img_url" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+                <ScalarProperty Name="species_id" ColumnName="species_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FavoriteUniverses">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.FavoriteUniverse">
+              <MappingFragment StoreEntitySet="FavoriteUniverse">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="main_img_url" ColumnName="main_img_url" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reviews">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Review">
+              <MappingFragment StoreEntitySet="Review">
+                <ScalarProperty Name="review_id" ColumnName="review_id" />
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Species">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Species">
+              <MappingFragment StoreEntitySet="Species">
+                <ScalarProperty Name="species_id" ColumnName="species_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StorySegments">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.StorySegment">
+              <MappingFragment StoreEntitySet="StorySegment">
+                <ScalarProperty Name="segment_id" ColumnName="segment_id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="order_index" ColumnName="order_index" />
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Tag">
+              <MappingFragment StoreEntitySet="Tag">
+                <ScalarProperty Name="tag_id" ColumnName="tag_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Universes">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.Universe">
+              <MappingFragment StoreEntitySet="Universe">
+                <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="visibility" ColumnName="visibility" />
+                <ScalarProperty Name="cover_img_url" ColumnName="cover_img_url" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="owner_id" ColumnName="owner_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="role_id" ColumnName="role_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorldImages">
+            <EntityTypeMapping TypeName="WorldBuilderPlatformDBModel.WorldImage">
+              <MappingFragment StoreEntitySet="WorldImage">
+                <ScalarProperty Name="image_id" ColumnName="image_id" />
+                <ScalarProperty Name="img_url" ColumnName="img_url" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="album_id" ColumnName="album_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CharacterStorySegment" TypeName="WorldBuilderPlatformDBModel.CharacterStorySegment" StoreEntitySet="CharacterStorySegment">
+            <EndProperty Name="Characters">
+              <ScalarProperty Name="character_id" ColumnName="character_id" />
+            </EndProperty>
+            <EndProperty Name="StorySegment">
+              <ScalarProperty Name="segment_id" ColumnName="segment_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="StorySegmentLocation" TypeName="WorldBuilderPlatformDBModel.StorySegmentLocation" StoreEntitySet="StorySegmentLocation">
+            <EndProperty Name="Location">
+              <ScalarProperty Name="location_id" ColumnName="location_id" />
+            </EndProperty>
+            <EndProperty Name="StorySegment">
+              <ScalarProperty Name="segment_id" ColumnName="segment_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="StorySegmentWorldImage" TypeName="WorldBuilderPlatformDBModel.StorySegmentWorldImage" StoreEntitySet="StorySegmentWorldImage">
+            <EndProperty Name="WorldImage">
+              <ScalarProperty Name="image_id" ColumnName="image_id" />
+            </EndProperty>
+            <EndProperty Name="StorySegment">
+              <ScalarProperty Name="segment_id" ColumnName="segment_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UniverseTag" TypeName="WorldBuilderPlatformDBModel.UniverseTag" StoreEntitySet="UniverseTag">
+            <EndProperty Name="Tag">
+              <ScalarProperty Name="tag_id" ColumnName="tag_id" />
+            </EndProperty>
+            <EndProperty Name="Universe">
+              <ScalarProperty Name="universe_id" ColumnName="universe_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

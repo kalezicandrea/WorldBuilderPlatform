@@ -1,0 +1,74 @@
+﻿@model IEnumerable<WorldBuilderPlatform.Universe>
+
+@{
+    ViewBag.Title = "Home";
+
+    var ratings = ViewBag.Ratings as Dictionary<int, decimal>;
+    var favoriteCounts = ViewBag.FavoriteCounts as Dictionary<int, int>;
+}
+
+<h2>Explore Universes</h2>
+
+<div class="row">
+    @foreach (var universe in Model)
+    {
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="card h-100">
+
+                @if (!string.IsNullOrEmpty(universe.cover_img_url))
+                {
+                    <img src="@universe.cover_img_url"
+                         class="card-img-top"
+                         alt="@universe.name" />
+                }
+                else
+                {
+                    <img src="~/Content/images/default-universe.jpg"
+                         class="card-img-top"
+                         alt="Default universe image" />
+                }
+
+            <div class="card-body">
+                <h5 class="card-title">@universe.name</h5>
+
+                <p class="card-text">
+                    @{
+                        var description = universe.description ?? "";
+                        var shortDescription = description.Length > 100
+                            ? description.Substring(0, 100) + "..."
+                            : description;
+                    }
+
+                    @shortDescription
+                </p>
+
+                <p class="text-muted">
+                    Author: @universe.User.username
+                </p>
+
+                <p>
+                    <strong>Rating:</strong>
+                    @(ratings != null && ratings.ContainsKey(universe.universe_id)
+                            ? ratings[universe.universe_id]
+                            : 0)
+                </p>
+
+                <p>
+                    <strong>Favorites:</strong>
+                    @(favoriteCounts != null && favoriteCounts.ContainsKey(universe.universe_id)
+                            ? favoriteCounts[universe.universe_id]
+                            : 0)
+                </p>
+
+                @Html.ActionLink(
+                    "View details",
+                    "Details",
+                    "Universes",
+                    new { id = universe.universe_id },
+                    new { @class = "btn btn-primary" }
+                )
+            </div>
+            </div>
+        </div>
+    }
+</div>

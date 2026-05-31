@@ -1,0 +1,49 @@
+﻿@model WorldBuilderPlatform.Universe
+
+@{
+    ViewBag.Title = Model.name;
+}
+
+<h2>@Model.name</h2>
+
+@if (!string.IsNullOrEmpty(Model.cover_img_url))
+{
+    <img src="@Model.cover_img_url" style="width: 300px;" />
+}
+
+<p>@Model.description</p>
+
+<p>
+    <strong>Visibility:</strong> @Model.visibility
+</p>
+
+<p>
+    <strong>Created at:</strong> @Model.created_at
+</p>
+
+@if (ViewBag.IsOwner == true || ViewBag.IsAdmin == true)
+{
+    <div class="mb-3">
+        @Html.ActionLink("Edit Universe", "Edit", "Universes", new { id = Model.universe_id }, new { @class = "btn btn-warning" })
+
+        @Html.ActionLink("Delete Universe", "Delete", "Universes", new { id = Model.universe_id }, new { @class = "btn btn-danger" })
+
+        @Html.ActionLink("Add Character", "Create", "Characters", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
+
+        @Html.ActionLink("Add Story Segment", "Create", "StorySegments", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
+
+        @Html.ActionLink("Add Location", "Create", "Locations", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
+    </div>
+}
+else
+{
+    <div class="mb-3">
+        @Html.ActionLink("Add to Favorites", "Add", "Favorites", new { universeId = Model.universe_id }, new { @class = "btn btn-outline-primary" })
+
+        @Html.ActionLink("Leave Review", "Create", "Reviews", new { universeId = Model.universe_id }, new { @class = "btn btn-outline-success" })
+    </div>
+}
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+    Back to home
+</a>
