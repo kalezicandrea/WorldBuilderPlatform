@@ -1,26 +1,177 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿/* ============================================================
+   BASIC MVC DEFAULTS
+   ============================================================ */
+
+body {
+    background-color: #f2f3f5;
+    color: #222;
+}
+
 .body-content {
-    margin-top: 15px;
+    margin-top: 24px;
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+/* Default MVC forms like Login/Register stay narrow */
 input,
 select,
 textarea {
     max-width: 280px;
 }
+
+.form-control {
+    border-radius: 8px;
+}
+
+/* Bigger project forms can use full available width */
+.card input,
+.card select,
+.card textarea,
+.search-sidebar input,
+.search-sidebar select,
+.search-sidebar textarea,
+.universe-sidebar input,
+.universe-sidebar select,
+.universe-sidebar textarea,
+.content-box input,
+.content-box select,
+.content-box textarea,
+.inner-item-box input,
+.inner-item-box select,
+.inner-item-box textarea {
+    max-width: 100%;
+}
+
+/* ============================================================
+   GENERAL LAYOUT BOXES
+   ============================================================ */
+
+.content-box,
+.tabs-box,
+.search-sidebar,
+.universe-sidebar,
+.admin-users-sidebar,
+.card {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.content-box {
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.inner-item-box {
+    background-color: #f9f9fb;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.card-header,
+.card-footer {
+    background-color: #f7f7f7;
+    border-color: #dddddd;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.btn-sm {
+    border-radius: 7px;
+}
+
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
+
+.home-page {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.search-sidebar {
+    width: 280px;
+    min-width: 280px;
+    padding: 18px;
+    height: fit-content;
+}
+
+    .search-sidebar h4 {
+        margin-bottom: 18px;
+    }
+
+    .search-sidebar h5 {
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+
+.home-results {
+    flex: 1;
+    min-width: 0;
+}
+
+.universe-card {
+    height: 100%;
+}
+
+.universe-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+/* ============================================================
+   ADMIN USERS SIDEBAR
+   ============================================================ */
+
+.admin-users-sidebar {
+    width: 280px;
+    min-width: 280px;
+    padding: 18px;
+    height: fit-content;
+}
+
+    .admin-users-sidebar h4 {
+        margin-bottom: 18px;
+    }
+
+.admin-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-user-card {
+    background-color: #f9f9fb;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+}
+
+/* ============================================================
+   UNIVERSE DETAILS PAGE
+   ============================================================ */
+
 .universe-page {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
+    flex-direction: row;
     align-items: flex-start;
     gap: 24px;
     margin-top: 25px;
@@ -30,33 +181,22 @@ textarea {
     width: 240px;
     min-width: 240px;
     max-width: 240px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 12px;
     padding: 18px;
     height: fit-content;
 }
 
-.universe-sidebar h5 {
-    margin-bottom: 15px;
-}
+    .universe-sidebar h5 {
+        margin-bottom: 15px;
+    }
 
-.universe-sidebar a {
-    display: block;
-    margin-bottom: 10px;
-}
+    .universe-sidebar a {
+        display: block;
+        margin-bottom: 10px;
+    }
 
 .universe-main {
     flex: 1;
     min-width: 0;
-}
-
-.content-box {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 24px;
 }
 
 .universe-header {
@@ -78,8 +218,12 @@ textarea {
     min-width: 220px;
 }
 
-.universe-description {
+.universe-description,
+.story-content {
     white-space: pre-line;
+}
+
+.universe-description {
     margin-bottom: 20px;
 }
 
@@ -88,33 +232,31 @@ textarea {
     max-height: 420px;
     object-fit: cover;
     border-radius: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
 }
+
+/* ============================================================
+   TABS
+   ============================================================ */
 
 .tabs-box {
-    background-color: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 14px;
     padding: 0;
     overflow: hidden;
+    margin-bottom: 24px;
 }
 
-.tabs-box .nav-tabs {
-    background-color: #eeeeee;
-    padding: 12px 12px 0 12px;
-}
+    .tabs-box .nav-tabs {
+        background-color: #f7f7f7;
+        padding: 12px 12px 0 12px;
+    }
 
 .tabs-content {
     padding: 24px;
 }
 
-.inner-item-box {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 18px;
-}
+/* ============================================================
+   STORY SEGMENTS
+   ============================================================ */
 
 .story-segment-header {
     display: flex;
@@ -130,9 +272,9 @@ textarea {
     line-height: 1;
 }
 
-.story-content {
-    white-space: pre-line;
-}
+/* ============================================================
+   CHARACTERS
+   ============================================================ */
 
 .character-box {
     display: flex;
@@ -143,21 +285,25 @@ textarea {
     width: 170px;
     min-width: 170px;
     height: 230px;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #cccccc;
     border-radius: 10px;
     overflow: hidden;
 }
 
-.character-image-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .character-image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
 .character-info {
     flex: 1;
 }
+
+/* ============================================================
+   LOCATIONS
+   ============================================================ */
 
 .location-box {
     display: flex;
@@ -168,17 +314,21 @@ textarea {
     width: 190px;
     min-width: 190px;
     height: 140px;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #cccccc;
     border-radius: 10px;
     overflow: hidden;
 }
 
-.location-image-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .location-image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+/* ============================================================
+   ALBUM
+   ============================================================ */
 
 .album-grid {
     display: grid;
@@ -187,8 +337,8 @@ textarea {
 }
 
 .album-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
     border-radius: 12px;
     padding: 12px;
 }
@@ -201,18 +351,38 @@ textarea {
         margin-bottom: 10px;
     }
 
+/* ============================================================
+   ACTIONS / MESSAGES
+   ============================================================ */
+
+.item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
 .empty-message {
     color: #777;
     font-style: italic;
 }
-@media (max-width: 768px) {
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 992px) {
+    .home-page,
     .universe-page {
         flex-direction: column;
     }
 
+    .search-sidebar,
+    .admin-users-sidebar,
     .universe-sidebar {
         width: 100%;
         min-width: 100%;
+        max-width: 100%;
     }
 
     .universe-header {
@@ -230,65 +400,6 @@ textarea {
 
     .character-image-box,
     .location-image-box {
-        width: 100%;
-        min-width: 100%;
-    }
-}
-.item-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.home-page {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    margin-top: 24px;
-}
-
-.search-sidebar {
-    width: 280px;
-    min-width: 280px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 18px;
-    height: fit-content;
-}
-
-    .search-sidebar h4 {
-        margin-bottom: 18px;
-    }
-
-    .search-sidebar h5 {
-        margin-top: 12px;
-        margin-bottom: 8px;
-    }
-
-.home-results {
-    flex: 1;
-    min-width: 0;
-}
-
-.universe-card {
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.universe-card-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
-
-@media (max-width: 768px) {
-    .home-page {
-        flex-direction: column;
-    }
-
-    .search-sidebar {
         width: 100%;
         min-width: 100%;
     }

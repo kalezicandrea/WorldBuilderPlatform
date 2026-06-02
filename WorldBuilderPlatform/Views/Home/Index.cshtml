@@ -13,6 +13,9 @@
     var allGenders = ViewBag.AllGenders;
     var allSpecies = ViewBag.AllSpecies;
 
+    bool isAdmin = ViewBag.IsAdmin == true;
+    var allUsers = ViewBag.AllUsers;
+
     int[] selectedTagIds = ViewBag.SelectedTagIds as int[] ?? new int[0];
     string[] selectedGenders = ViewBag.SelectedGenders as string[] ?? new string[0];
     int[] selectedSpeciesIds = ViewBag.SelectedSpeciesIds as int[] ?? new int[0];
@@ -42,58 +45,24 @@
             <div class="form-group mb-3">
                 <label for="category">Category</label>
                 <select name="category" id="category" class="form-control">
-                    <option value="universe" @(selectedCategory == "universe" ? "selected" : "")>
-                        Universe
-                    </option>
-
-                    <option value="character" @(selectedCategory == "character" ? "selected" : "")>
-                        Character
-                    </option>
-
-                    <option value="story" @(selectedCategory == "story" ? "selected" : "")>
-                        Story Segment
-                    </option>
-
-                    <option value="location" @(selectedCategory == "location" ? "selected" : "")>
-                        Location
-                    </option>
+                    <option value="universe" @(selectedCategory == "universe" ? "selected" : "")>Universe</option>
+                    <option value="character" @(selectedCategory == "character" ? "selected" : "")>Character</option>
+                    <option value="story" @(selectedCategory == "story" ? "selected" : "")>Story Segment</option>
+                    <option value="location" @(selectedCategory == "location" ? "selected" : "")>Location</option>
                 </select>
             </div>
 
             <div class="form-group mb-3">
                 <label for="sortBy">Organize by</label>
                 <select name="sortBy" id="sortBy" class="form-control">
-                    <option value="newest" @(selectedSort == "newest" ? "selected" : "")>
-                        Newest to oldest
-                    </option>
-
-                    <option value="oldest" @(selectedSort == "oldest" ? "selected" : "")>
-                        Oldest to newest
-                    </option>
-
-                    <option value="mostReviews" @(selectedSort == "mostReviews" ? "selected" : "")>
-                        Number of reviews: most to least
-                    </option>
-
-                    <option value="leastReviews" @(selectedSort == "leastReviews" ? "selected" : "")>
-                        Number of reviews: least to most
-                    </option>
-
-                    <option value="bestRating" @(selectedSort == "bestRating" ? "selected" : "")>
-                        Rating: best to worst
-                    </option>
-
-                    <option value="worstRating" @(selectedSort == "worstRating" ? "selected" : "")>
-                        Rating: worst to best
-                    </option>
-
-                    <option value="mostFavorites" @(selectedSort == "mostFavorites" ? "selected" : "")>
-                        Favorites: most to least
-                    </option>
-
-                    <option value="leastFavorites" @(selectedSort == "leastFavorites" ? "selected" : "")>
-                        Favorites: least to most
-                    </option>
+                    <option value="newest" @(selectedSort == "newest" ? "selected" : "")>Newest to oldest</option>
+                    <option value="oldest" @(selectedSort == "oldest" ? "selected" : "")>Oldest to newest</option>
+                    <option value="mostReviews" @(selectedSort == "mostReviews" ? "selected" : "")>Number of reviews: most to least</option>
+                    <option value="leastReviews" @(selectedSort == "leastReviews" ? "selected" : "")>Number of reviews: least to most</option>
+                    <option value="bestRating" @(selectedSort == "bestRating" ? "selected" : "")>Rating: best to worst</option>
+                    <option value="worstRating" @(selectedSort == "worstRating" ? "selected" : "")>Rating: worst to best</option>
+                    <option value="mostFavorites" @(selectedSort == "mostFavorites" ? "selected" : "")>Favorites: most to least</option>
+                    <option value="leastFavorites" @(selectedSort == "leastFavorites" ? "selected" : "")>Favorites: least to most</option>
                 </select>
             </div>
 
@@ -312,6 +281,41 @@
         }
 
     </main>
+
+    @if (isAdmin)
+    {
+        <aside class="admin-users-sidebar">
+            <h4>Registered Users</h4>
+
+            @if (allUsers == null || allUsers.Count == 0)
+            {
+                <p class="text-muted">No users found.</p>
+            }
+            else
+            {
+                <div class="admin-users-list">
+                    @foreach (var user in allUsers)
+                    {
+                        <div class="admin-user-card">
+                            <strong>@user.username</strong>
+
+                            <div class="text-muted">
+                                @user.email
+                            </div>
+
+                            <div>
+                                <small>Role ID: @user.role_id</small>
+                            </div>
+
+                            <div>
+                                <small>Created: @user.created_at.ToString("dd.MM.yyyy")</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </aside>
+    }
 
 </div>
 

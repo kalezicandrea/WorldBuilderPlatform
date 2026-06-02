@@ -307,6 +307,7 @@
     <Folder Include="Content\ImagesDesign\" />
     <Folder Include="Content\Uploaded\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

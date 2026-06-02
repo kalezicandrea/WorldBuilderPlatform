@@ -41,7 +41,6 @@ namespace WorldBuilderPlatform.Controllers
                 }
 
                 int currentUserId = (int)Session["user_id"];
-
                 universes = universes.Where(u => u.owner_id == currentUserId);
             }
             else if (myFavorites)
@@ -61,12 +60,12 @@ namespace WorldBuilderPlatform.Controllers
             }
             else if (isAdmin)
             {
+                // Admin sees all universes, including private ones.
             }
             else
             {
                 universes = universes.Where(u => u.visibility == "public");
             }
-
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -108,7 +107,6 @@ namespace WorldBuilderPlatform.Controllers
                 }
             }
 
-
             if (category == "universe" && selectedTagIds != null && selectedTagIds.Length > 0)
             {
                 var tagIds = selectedTagIds.ToList();
@@ -116,7 +114,6 @@ namespace WorldBuilderPlatform.Controllers
                 universes = universes.Where(u =>
                     u.Tags.Any(t => tagIds.Contains(t.tag_id)));
             }
-
 
             if (category == "character")
             {
@@ -149,10 +146,7 @@ namespace WorldBuilderPlatform.Controllers
                 }
             }
 
-
-
             var result = universes.ToList();
-
 
             var ratings = new Dictionary<int, decimal>();
             var favoriteCounts = new Dictionary<int, int>();
@@ -177,12 +171,9 @@ namespace WorldBuilderPlatform.Controllers
                 reviewCounts[universe.universe_id] = reviewCount;
             }
 
-
             if (sortBy == "oldest")
             {
-                result = result
-                    .OrderBy(u => u.created_at)
-                    .ToList();
+                result = result.OrderBy(u => u.created_at).ToList();
             }
             else if (sortBy == "mostReviews")
             {
@@ -222,15 +213,12 @@ namespace WorldBuilderPlatform.Controllers
             }
             else
             {
-                result = result
-                    .OrderByDescending(u => u.created_at)
-                    .ToList();
+                result = result.OrderByDescending(u => u.created_at).ToList();
             }
 
             ViewBag.Ratings = ratings;
             ViewBag.FavoriteCounts = favoriteCounts;
             ViewBag.ReviewCounts = reviewCounts;
-
 
             ViewBag.AllTags = db.Tags.OrderBy(t => t.name).ToList();
 
@@ -244,6 +232,21 @@ namespace WorldBuilderPlatform.Controllers
             ViewBag.AllSpecies = db.Species
                 .OrderBy(s => s.name)
                 .ToList();
+
+            ViewBag.IsAdmin = isAdmin;
+
+            if (isAdmin)
+            {
+
+                ViewBag.AllUsers = db.Users
+                    .Where(u => u.role_id != 1)
+                    .OrderBy(u => u.username)
+                    .ToList();
+            }
+            else
+            {
+                ViewBag.AllUsers = null;
+            }
 
             ViewBag.SearchText = searchText;
             ViewBag.Category = category;
