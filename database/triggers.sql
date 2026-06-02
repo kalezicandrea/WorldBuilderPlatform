@@ -20,25 +20,37 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER TRIGGER trg_ValidateStorySegmentWorldImageUniverse
-ON StorySegmentWorldImage
+CREATE OR ALTER TRIGGER trg_ValidateCharacterRelationship
+ON CharacterRelationship
 AFTER INSERT, UPDATE
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     IF EXISTS (
         SELECT 1
         FROM inserted i
-        JOIN StorySegment ss
-            ON i.segment_id = ss.segment_id
-        JOIN WorldImage wi
-            ON i.image_id = wi.image_id
-        JOIN Album a
-            ON wi.album_id = a.album_id
-        WHERE ss.universe_id <> a.universe_id
+        WHERE i.character_id_1 = i.character_id_2
     )
     BEGIN
-        RAISERROR('Story segment and image must belong to the same universe.', 16, 1);
+        RAISERROR('A character cannot have a relationship with itself.', 16, 1);
         ROLLBACK TRANSACTION;
-    END
+        RETURN;
+    END;
+
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Characters c1
+            ON i.character_id_1 = c1.character_id
+        INNER JOIN Characters c2
+            ON i.character_id_2 = c2.character_id
+        WHERE c1.universe_id <> c2.universe_id
+    )
+    BEGIN
+        RAISERROR('Characters in a relationship must belong to the same universe.', 16, 1);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END;
 END;
 GO

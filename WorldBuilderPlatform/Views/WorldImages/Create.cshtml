@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Add Image";
+}
+
+<div class="container mt-4">
+
+    <h2>Add Image to Album</h2>
+
+    <p class="text-muted">
+        Universe: @ViewBag.UniverseName
+    </p>
+
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "WorldImages", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="universeId" value="@ViewBag.UniverseId" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Album and image information</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <div class="mb-3">
+                            <img src="@Url.Content("~/Content/ImagesDesign/default-image.jpg")"
+                                 alt="Default image"
+                                 class="img-fluid rounded"
+                                 style="width: 100%; max-height: 320px; object-fit: cover;" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="imageFile">Image file</label>
+                            <input type="file"
+                                   name="imageFile"
+                                   id="imageFile"
+                                   class="form-control" />
+                        </div>
+
+                        <small class="text-muted">
+                            Allowed formats: JPG, JPEG, PNG, WEBP. Max size: 5 MB.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="form-group mb-3">
+                            <label for="albumName">Album name</label>
+                            <input type="text"
+                                   name="albumName"
+                                   id="albumName"
+                                   class="form-control"
+                                   placeholder="Enter album name"
+                                   value="Main Album" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="albumDescription">Album description</label>
+                            <textarea name="albumDescription"
+                                      id="albumDescription"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Describe this album..."></textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="imageDescription">Image description</label>
+                            <textarea name="imageDescription"
+                                      id="imageDescription"
+                                      class="form-control"
+                                      rows="6"
+                                      placeholder="Describe this image..."></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Add Image
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = ViewBag.UniverseId },
+                    new { @class = "btn btn-secondary" }
+                )
+            </div>
+
+        </div>
+    }
+
+</div>

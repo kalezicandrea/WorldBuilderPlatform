@@ -2,48 +2,659 @@
 
 @{
     ViewBag.Title = Model.name;
+
+    bool canEdit = ViewBag.IsOwner == true || ViewBag.IsAdmin == true;
+    bool canReview = ViewBag.CanReview == true;
+    bool alreadyReviewed = ViewBag.AlreadyReviewed == true;
+
+    var storySegments = ViewBag.StorySegments;
+    var characters = ViewBag.Characters;
+    var locations = ViewBag.Locations;
+    var albums = ViewBag.Albums;
+    var relationships = ViewBag.CharacterRelationships;
+    var reviews = ViewBag.Reviews;
 }
 
-<h2>@Model.name</h2>
+<div class="universe-page">
 
-@if (!string.IsNullOrEmpty(Model.cover_img_url))
-{
-    <img src="@Model.cover_img_url" style="width: 300px;" />
-}
+    @if (canEdit)
+    {
+        <aside class="universe-sidebar">
+            <h5>Manage Universe</h5>
 
-<p>@Model.description</p>
+            @Html.ActionLink(
+                "Edit Universe",
+                "Edit",
+                "Universes",
+                new { id = Model.universe_id },
+                new { @class = "btn btn-outline-primary btn-sm" }
+            )
 
-<p>
-    <strong>Visibility:</strong> @Model.visibility
-</p>
+            @Html.ActionLink(
+                "Delete Universe",
+                "Delete",
+                "Universes",
+                new { id = Model.universe_id },
+                new { @class = "btn btn-outline-danger btn-sm" }
+            )
 
-<p>
-    <strong>Created at:</strong> @Model.created_at
-</p>
+            <hr />
 
-@if (ViewBag.IsOwner == true || ViewBag.IsAdmin == true)
-{
-    <div class="mb-3">
-        @Html.ActionLink("Edit Universe", "Edit", "Universes", new { id = Model.universe_id }, new { @class = "btn btn-warning" })
+            @Html.ActionLink(
+                "Add Character",
+                "Create",
+                "Characters",
+                new { universeId = Model.universe_id },
+                new { @class = "btn btn-primary btn-sm" }
+            )
 
-        @Html.ActionLink("Delete Universe", "Delete", "Universes", new { id = Model.universe_id }, new { @class = "btn btn-danger" })
+            @Html.ActionLink(
+                "Add Story Segment",
+                "Create",
+                "StorySegments",
+                new { universeId = Model.universe_id },
+                new { @class = "btn btn-primary btn-sm" }
+            )
 
-        @Html.ActionLink("Add Character", "Create", "Characters", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink(
+                "Add Location",
+                "Create",
+                "Locations",
+                new { universeId = Model.universe_id },
+                new { @class = "btn btn-primary btn-sm" }
+            )
 
-        @Html.ActionLink("Add Story Segment", "Create", "StorySegments", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
+            @Html.ActionLink(
+                "Add Image",
+                "Create",
+                "WorldImages",
+                new { universeId = Model.universe_id },
+                new { @class = "btn btn-primary btn-sm" }
+            )
+        </aside>
+    }
 
-        @Html.ActionLink("Add Location", "Create", "Locations", new { universeId = Model.universe_id }, new { @class = "btn btn-primary" })
-    </div>
-}
-else
-{
-    <div class="mb-3">
-        @Html.ActionLink("Add to Favorites", "Add", "Favorites", new { universeId = Model.universe_id }, new { @class = "btn btn-outline-primary" })
+    <main class="universe-main">
 
-        @Html.ActionLink("Leave Review", "Create", "Reviews", new { universeId = Model.universe_id }, new { @class = "btn btn-outline-success" })
-    </div>
-}
+        <section class="content-box">
 
-<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
-    Back to home
-</a>
+            <div class="universe-header">
+                <div>
+                    <h2 class="universe-title">@Model.name</h2>
+                </div>
+
+                <div class="universe-meta">
+                    <div>
+                        <strong>Author:</strong> @Model.User.username
+                    </div>
+
+                    <div>
+                        <strong>Created:</strong> @Model.created_at.ToString("dd.MM.yyyy")
+                    </div>
+
+                    <div>
+                        <strong>Visibility:</strong> @Model.visibility
+                    </div>
+
+                    <div>
+                        <strong>Tags:</strong> @ViewBag.Tags
+                    </div>
+
+                    <div>
+                        <strong>Average rating:</strong> @ViewBag.AverageRating
+                    </div>
+                </div>
+            </div>
+
+            <div class="universe-description">
+                @Model.description
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.cover_img_url))
+            {
+                <img src="@Model.cover_img_url"
+                     alt="@Model.name"
+                     class="cover-image" />
+            }
+            else
+            {
+                <img src="@Url.Content("~/Content/ImagesDesign/default-universe.jpg")"
+                     alt="Default universe image"
+                     class="cover-image" />
+            }
+
+            @if (Session["user_id"] != null && Session["user_id"].ToString() != Model.owner_id.ToString())
+            {
+                <div style="margin-top: 15px;">
+                    @if (ViewBag.IsFavorite == true)
+                    {
+                        using (Html.BeginForm("RemoveFromFavorites", "Universes", new { id = Model.universe_id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-outline-danger">
+                                Remove from Favorites
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("AddToFavorites", "Universes", new { id = Model.universe_id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-outline-primary">
+                                Add to Favorites
+                            </button>
+                        }
+                    }
+                </div>
+            }
+
+        </section>
+
+        <section class="tabs-box">
+
+            <ul class="nav nav-tabs" id="universeTabs" role="tablist">
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active"
+                            id="story-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#story"
+                            type="button"
+                            role="tab">
+                        Story Segments
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link"
+                            id="characters-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#characters"
+                            type="button"
+                            role="tab">
+                        Characters
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link"
+                            id="locations-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#locations"
+                            type="button"
+                            role="tab">
+                        Locations
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link"
+                            id="album-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#album"
+                            type="button"
+                            role="tab">
+                        Album
+                    </button>
+                </li>
+
+            </ul>
+
+            <div class="tab-content tabs-content">
+
+                <div class="tab-pane fade show active" id="story" role="tabpanel">
+
+                    @if (storySegments == null || storySegments.Count == 0)
+                    {
+                        <p class="empty-message">There are no story segments yet.</p>
+                    }
+                    else
+                    {
+                        foreach (var segment in storySegments)
+                        {
+                            <div class="inner-item-box">
+
+                                <div class="story-segment-header">
+                                    @if (canEdit)
+                                    {
+                                        <span class="drag-handle">⋮⋮</span>
+                                    }
+
+                                    <h4>@segment.title</h4>
+                                </div>
+
+                                <div class="story-content">
+                                    @segment.content
+                                </div>
+
+                                @if (canEdit)
+                                {
+                                    <div class="item-actions">
+                                        @Html.ActionLink(
+                                            "Edit",
+                                            "Edit",
+                                            "StorySegments",
+                                            new { id = segment.segment_id },
+                                            new { @class = "btn btn-sm btn-outline-primary" }
+                                        )
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "StorySegments",
+                                            new { id = segment.segment_id },
+                                            new { @class = "btn btn-sm btn-outline-danger" }
+                                        )
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    }
+
+                </div>
+
+                <div class="tab-pane fade" id="characters" role="tabpanel">
+
+                    @if (characters == null || characters.Count == 0)
+                    {
+                        <p class="empty-message">There are no characters yet.</p>
+                    }
+                    else
+                    {
+                        foreach (var character in characters)
+                        {
+                            <div class="inner-item-box">
+
+                                <div class="character-box">
+
+                                    <div class="character-image-box">
+                                        @if (!string.IsNullOrEmpty(character.main_img_url))
+                                        {
+                                            <img src="@character.main_img_url"
+                                                 alt="@character.name" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/Content/ImagesDesign/default-character.jpg")"
+                                                 alt="Default character image" />
+                                        }
+                                    </div>
+
+                                    <div class="character-info">
+                                        <h4>@character.name</h4>
+
+                                        <p>
+                                            <strong>Gender:</strong> @character.gender
+                                        </p>
+
+                                        <p>
+                                            <strong>Species:</strong>
+                                            @if (character.Species != null)
+                                            {
+                                                @character.Species.name
+                                            }
+                                            else
+                                            {
+                                                <span>Unknown</span>
+                                            }
+                                        </p>
+
+                                        <p>
+                                            <strong>Description:</strong>
+                                        </p>
+
+                                        <p>
+                                            @character.description
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                @if (canEdit)
+                                {
+                                    <div class="item-actions">
+                                        @Html.ActionLink(
+                                            "Edit",
+                                            "Edit",
+                                            "Characters",
+                                            new { id = character.character_id },
+                                            new { @class = "btn btn-sm btn-outline-primary" }
+                                        )
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "Characters",
+                                            new { id = character.character_id },
+                                            new { @class = "btn btn-sm btn-outline-danger" }
+                                        )
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    }
+
+                    <div class="inner-item-box">
+                        <h4>Character Relationships</h4>
+
+                        @if (canEdit)
+                        {
+                            <div class="item-actions">
+                                @Html.ActionLink(
+                                    "Add Relationship",
+                                    "Create",
+                                    "CharacterRelationships",
+                                    new { universeId = Model.universe_id },
+                                    new { @class = "btn btn-sm btn-primary" }
+                                )
+                            </div>
+                        }
+
+                        @if (relationships == null || relationships.Count == 0)
+                        {
+                            <p class="empty-message">There are no character relationships yet.</p>
+                        }
+                        else
+                        {
+                            foreach (var relationship in relationships)
+                            {
+                                <div class="inner-item-box">
+                                    <p>
+                                        @relationship.Character.name
+                                        <strong>@relationship.relation_type</strong>
+                                        @relationship.Character1.name
+                                    </p>
+
+                                    @if (canEdit)
+                                    {
+                                        <div class="item-actions">
+                                            @Html.ActionLink(
+                                                "Edit",
+                                                "Edit",
+                                                "CharacterRelationships",
+                                                new { id = relationship.relationship_id },
+                                                new { @class = "btn btn-sm btn-outline-primary" }
+                                            )
+
+                                            @Html.ActionLink(
+                                                "Delete",
+                                                "Delete",
+                                                "CharacterRelationships",
+                                                new { id = relationship.relationship_id },
+                                                new { @class = "btn btn-sm btn-outline-danger" }
+                                            )
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+                <div class="tab-pane fade" id="locations" role="tabpanel">
+
+                    @if (locations == null || locations.Count == 0)
+                    {
+                        <p class="empty-message">There are no locations yet.</p>
+                    }
+                    else
+                    {
+                        foreach (var location in locations)
+                        {
+                            <div class="inner-item-box">
+
+                                <div class="location-box">
+
+                                    <div class="location-image-box">
+                                        @if (!string.IsNullOrEmpty(location.main_img_url))
+                                        {
+                                            <img src="@location.main_img_url"
+                                                 alt="@location.name" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/Content/ImagesDesign/default-location.jpg")"
+                                                 alt="Default location image" />
+                                        }
+                                    </div>
+
+                                    <div>
+                                        <h4>@location.name</h4>
+
+                                        <p>
+                                            @location.description
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                @if (canEdit)
+                                {
+                                    <div class="item-actions">
+                                        @Html.ActionLink(
+                                            "Edit",
+                                            "Edit",
+                                            "Locations",
+                                            new { id = location.location_id },
+                                            new { @class = "btn btn-sm btn-outline-primary" }
+                                        )
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "Locations",
+                                            new { id = location.location_id },
+                                            new { @class = "btn btn-sm btn-outline-danger" }
+                                        )
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                    }
+
+                </div>
+
+                <div class="tab-pane fade" id="album" role="tabpanel">
+
+                    @if (albums == null || albums.Count == 0)
+                    {
+                        <p class="empty-message">There are no albums yet.</p>
+                    }
+                    else
+                    {
+                        foreach (var album in albums)
+                        {
+                            <div class="inner-item-box">
+                                <h4>@album.name</h4>
+
+                                <p>@album.description</p>
+
+                                @if (album.WorldImages == null || album.WorldImages.Count == 0)
+                                {
+                                    <p class="empty-message">This album has no images.</p>
+                                }
+                                else
+                                {
+                                    <div class="album-grid">
+                                        @foreach (var image in album.WorldImages)
+                                        {
+                                            <div class="album-card">
+                                                <a href="@image.img_url" target="_blank">
+                                                    <img src="@image.img_url"
+                                                         alt="Album image" />
+                                                </a>
+
+                                                <p>@image.description</p>
+
+                                                @if (canEdit)
+                                                {
+                                                    <div class="item-actions">
+                                                        @Html.ActionLink(
+                                                            "Edit",
+                                                            "Edit",
+                                                            "WorldImages",
+                                                            new { id = image.image_id },
+                                                            new { @class = "btn btn-sm btn-outline-primary" }
+                                                        )
+
+                                                        @Html.ActionLink(
+                                                            "Delete",
+                                                            "Delete",
+                                                            "WorldImages",
+                                                            new { id = image.image_id },
+                                                            new { @class = "btn btn-sm btn-outline-danger" }
+                                                        )
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="content-box reviews-box">
+
+            <div class="universe-header">
+                <div>
+                    <h3>Reviews</h3>
+                </div>
+
+                <div class="universe-meta">
+                    <strong>Average rating:</strong> @ViewBag.AverageRating
+                </div>
+            </div>
+
+            @if (TempData["ReviewError"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ReviewError"]
+                </div>
+            }
+
+            @if (Session["user_id"] == null)
+            {
+                <p class="text-muted">
+                    Log in to leave a review.
+                </p>
+            }
+            else if (canReview)
+            {
+                using (Html.BeginForm("Create", "Reviews", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="universeId" value="@Model.universe_id" />
+
+                    <div class="inner-item-box">
+                        <h4>Leave a review</h4>
+
+                        <div class="form-group mb-3">
+                            <label for="rating">Rating</label>
+                            <select name="rating" id="rating" class="form-control">
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Very good</option>
+                                <option value="3">3 - Good</option>
+                                <option value="2">2 - Not great</option>
+                                <option value="1">1 - Bad</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="comment">Comment</label>
+                            <textarea name="comment"
+                                      id="comment"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="Write your review..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Submit Review
+                        </button>
+                    </div>
+                }
+            }
+            else if (ViewBag.IsOwner == true)
+            {
+                <p class="text-muted">
+                    You cannot review your own universe.
+                </p>
+            }
+            else if (alreadyReviewed)
+            {
+                <p class="text-muted">
+                    You have already reviewed this universe.
+                </p>
+            }
+
+            @if (reviews == null || reviews.Count == 0)
+            {
+                <p class="empty-message">There are no reviews yet.</p>
+            }
+            else
+            {
+                foreach (var review in reviews)
+                {
+                    <div class="inner-item-box">
+                        <div class="universe-header">
+                            <div>
+                                <h4>@review.User.username</h4>
+                            </div>
+
+                            <div class="universe-meta">
+                                <strong>Rating:</strong> @review.rating / 5
+
+                                <br />
+
+                                <strong>Date:</strong> @review.created_at.ToString("dd.MM.yyyy")
+                            </div>
+                        </div>
+
+                        <p>
+                            @review.text
+                        </p>
+
+                        @if (Session["user_id"] != null)
+                        {
+                            int currentUserId = (int)Session["user_id"];
+                            bool canDeleteReview =
+                            review.user_id == currentUserId ||
+                            ViewBag.IsAdmin == true;
+
+                            if (canDeleteReview)
+                            {
+                                <div class="item-actions">
+                                    @Html.ActionLink(
+                                        "Delete",
+                                        "Delete",
+                                        "Reviews",
+                                        new { id = review.review_id },
+                                        new { @class = "btn btn-sm btn-outline-danger" }
+                                    )
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+
+        </section>
+
+    </main>
+
+</div>

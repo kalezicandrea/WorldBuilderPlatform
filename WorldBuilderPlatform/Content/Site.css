@@ -18,3 +18,278 @@ select,
 textarea {
     max-width: 280px;
 }
+.universe-page {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 25px;
+}
+
+.universe-sidebar {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px;
+    height: fit-content;
+}
+
+.universe-sidebar h5 {
+    margin-bottom: 15px;
+}
+
+.universe-sidebar a {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.universe-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.content-box {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.universe-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+
+.universe-title {
+    margin: 0;
+}
+
+.universe-meta {
+    text-align: right;
+    color: #666;
+    font-size: 14px;
+    min-width: 220px;
+}
+
+.universe-description {
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
+
+.cover-image {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
+
+.tabs-box {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.tabs-box .nav-tabs {
+    background-color: #eeeeee;
+    padding: 12px 12px 0 12px;
+}
+
+.tabs-content {
+    padding: 24px;
+}
+
+.inner-item-box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+}
+
+.story-segment-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.drag-handle {
+    font-size: 22px;
+    color: #777;
+    cursor: grab;
+    line-height: 1;
+}
+
+.story-content {
+    white-space: pre-line;
+}
+
+.character-box {
+    display: flex;
+    gap: 18px;
+}
+
+.character-image-box {
+    width: 170px;
+    min-width: 170px;
+    height: 230px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.character-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.character-info {
+    flex: 1;
+}
+
+.location-box {
+    display: flex;
+    gap: 18px;
+}
+
+.location-image-box {
+    width: 190px;
+    min-width: 190px;
+    height: 140px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.location-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.album-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+    .album-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+.empty-message {
+    color: #777;
+    font-style: italic;
+}
+@media (max-width: 768px) {
+    .universe-page {
+        flex-direction: column;
+    }
+
+    .universe-sidebar {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .universe-header {
+        flex-direction: column;
+    }
+
+    .universe-meta {
+        text-align: left;
+    }
+
+    .character-box,
+    .location-box {
+        flex-direction: column;
+    }
+
+    .character-image-box,
+    .location-image-box {
+        width: 100%;
+        min-width: 100%;
+    }
+}
+.item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.home-page {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.search-sidebar {
+    width: 280px;
+    min-width: 280px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 18px;
+    height: fit-content;
+}
+
+    .search-sidebar h4 {
+        margin-bottom: 18px;
+    }
+
+    .search-sidebar h5 {
+        margin-top: 12px;
+        margin-bottom: 8px;
+    }
+
+.home-results {
+    flex: 1;
+    min-width: 0;
+}
+
+.universe-card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.universe-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .home-page {
+        flex-direction: column;
+    }
+
+    .search-sidebar {
+        width: 100%;
+        min-width: 100%;
+    }
+}

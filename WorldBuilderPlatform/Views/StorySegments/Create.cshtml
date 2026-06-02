@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Create Story Segment";
+}
+
+<div class="container mt-4">
+
+    <h2>Create Story Segment</h2>
+
+    <p class="text-muted">
+        Universe: @ViewBag.UniverseName
+    </p>
+
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "StorySegments", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="universeId" value="@ViewBag.UniverseId" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Story segment information</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-group mb-3">
+                    <label for="title">Title</label>
+                    <input type="text"
+                           name="title"
+                           id="title"
+                           class="form-control"
+                           placeholder="Enter story segment title" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="content">Content</label>
+                    <textarea name="content"
+                              id="content"
+                              class="form-control"
+                              rows="12"
+                              placeholder="Write your story segment..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Create Story Segment
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = ViewBag.UniverseId },
+                    new { @class = "btn btn-secondary" }
+                )
+            </div>
+
+        </div>
+    }
+
+</div>

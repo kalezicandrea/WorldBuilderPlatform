@@ -1,67 +1,64 @@
 USE WorldBuilderPlatformDB
 GO
 
-CREATE OR ALTER PROCEDURE sp_ReorderStorySegment
-    @segment_id INT,
-    @new_order_index INT
+CREATE OR ALTER PROCEDURE sp_CreateCharacterWithSpecies
+    @universe_id INT,
+    @name NVARCHAR(150),
+    @gender NVARCHAR(30) = NULL,
+    @species_name NVARCHAR(100) = NULL,
+    @species_description NVARCHAR(MAX) = NULL,
+    @description NVARCHAR(MAX) = NULL,
+    @main_img_url NVARCHAR(500) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @universe_id INT;
-    DECLARE @old_order_index INT;
+    DECLARE @species_id INT = NULL;
 
-    SELECT 
-        @universe_id = universe_id,
-        @old_order_index = order_index
-    FROM StorySegment
-    WHERE segment_id = @segment_id;
-
-    IF @universe_id IS NULL
+    IF @species_name IS NOT NULL AND LTRIM(RTRIM(@species_name)) <> ''
     BEGIN
-        RAISERROR('Story segment does not exist.', 16, 1);
-        RETURN;
-    END
-
-    IF @new_order_index < 1
-    BEGIN
-        RAISERROR('Order index must be greater than or equal to 1.', 16, 1);
-        RETURN;
-    END
-
-    BEGIN TRANSACTION;
-
-    UPDATE StorySegment
-    SET order_index = -1
-    WHERE segment_id = @segment_id;
-
-    IF @new_order_index < @old_order_index
-    BEGIN
-        UPDATE StorySegment
-        SET order_index = order_index + 1
+        SELECT @species_id = species_id
+        FROM Species
         WHERE universe_id = @universe_id
-          AND order_index >= @new_order_index
-          AND order_index < @old_order_index;
+          AND name = @species_name;
+
+        IF @species_id IS NULL
+        BEGIN
+            INSERT INTO Species (
+                name,
+                universe_id,
+                description
+            )
+            VALUES (
+                @species_name,
+                @universe_id,
+                @species_description
+            );
+
+            SET @species_id = SCOPE_IDENTITY();
+        END
     END
 
-    IF @new_order_index > @old_order_index
-    BEGIN
-        UPDATE StorySegment
-        SET order_index = order_index - 1
-        WHERE universe_id = @universe_id
-          AND order_index > @old_order_index
-          AND order_index <= @new_order_index;
-    END
-
-    UPDATE StorySegment
-    SET order_index = @new_order_index
-    WHERE segment_id = @segment_id;
-
-    COMMIT TRANSACTION;
+    INSERT INTO Characters (
+        name,
+        gender,
+        description,
+        main_img_url,
+        created_at,
+        universe_id,
+        species_id
+    )
+    VALUES (
+        @name,
+        @gender,
+        @description,
+        @main_img_url,
+        SYSDATETIME(),
+        @universe_id,
+        @species_id
+    );
 END;
 GO
-
-
 
 CREATE OR ALTER PROCEDURE sp_AddFavoriteUniverse
     @user_id INT,

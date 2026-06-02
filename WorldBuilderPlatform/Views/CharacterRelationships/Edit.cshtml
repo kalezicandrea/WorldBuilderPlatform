@@ -1,0 +1,137 @@
+﻿@model WorldBuilderPlatform.CharacterRelationship
+
+@{
+    ViewBag.Title = "Edit Character Relationship";
+
+    var characters = ViewBag.Characters;
+}
+
+<div class="container mt-4">
+
+    <h2>Edit Character Relationship</h2>
+
+    <p class="text-muted">
+        Universe: @ViewBag.UniverseName
+    </p>
+
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @using (Html.BeginForm("Edit", "CharacterRelationships", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.relationship_id" />
+        <input type="hidden" name="universeId" value="@ViewBag.UniverseId" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Relationship information</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-group mb-3">
+                    <label for="characterId1">First character</label>
+
+                    <select name="characterId1" id="characterId1" class="form-control">
+                        @foreach (var character in characters)
+                        {
+                            <option value="@character.character_id"
+                                    @(character.character_id == Model.character_id_1 ? "selected" : "")>
+                                @character.name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="relationType">Relationship type</label>
+
+                    <input type="text"
+                           name="relationType"
+                           id="relationType"
+                           class="form-control"
+                           value="@Model.relation_type"
+                           placeholder="friend, enemy, sibling, parent..." />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="characterId2">Second character</label>
+
+                    <select name="characterId2" id="characterId2" class="form-control">
+                        @foreach (var character in characters)
+                        {
+                            <option value="@character.character_id"
+                                    @(character.character_id == Model.character_id_2 ? "selected" : "")>
+                                @character.name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = ViewBag.UniverseId },
+                    new { @class = "btn btn-secondary" }
+                )
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@section scripts {
+    <script>
+        function updateSecondDropdown() {
+            var firstSelect = document.getElementById("characterId1");
+            var secondSelect = document.getElementById("characterId2");
+
+            var selectedFirstValue = firstSelect.value;
+
+            for (var i = 0; i < secondSelect.options.length; i++) {
+                var option = secondSelect.options[i];
+
+                if (option.value === selectedFirstValue) {
+                    option.style.display = "none";
+
+                    if (secondSelect.value === selectedFirstValue) {
+                        secondSelect.selectedIndex = 0;
+                    }
+                } else {
+                    option.style.display = "block";
+                }
+            }
+
+            if (secondSelect.value === selectedFirstValue) {
+                for (var j = 0; j < secondSelect.options.length; j++) {
+                    if (secondSelect.options[j].style.display !== "none") {
+                        secondSelect.selectedIndex = j;
+                        break;
+                    }
+                }
+            }
+        }
+
+        document.getElementById("characterId1").addEventListener("change", updateSecondDropdown);
+
+        updateSecondDropdown();
+    </script>
+}

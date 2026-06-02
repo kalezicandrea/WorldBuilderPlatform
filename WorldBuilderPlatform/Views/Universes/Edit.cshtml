@@ -1,0 +1,139 @@
+﻿@model WorldBuilderPlatform.Universe
+
+@{
+    ViewBag.Title = "Edit Universe";
+}
+
+<div class="container mt-4">
+
+    <h2>Edit Universe</h2>
+
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @using (Html.BeginForm("Edit", "Universes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.universe_id" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Universe information</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <div class="mb-3">
+                            @if (!string.IsNullOrEmpty(Model.cover_img_url))
+                            {
+                                <img src="@Model.cover_img_url"
+                                     alt="@Model.name"
+                                     class="img-fluid rounded"
+                                     style="width: 100%; max-height: 300px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/ImagesDesign/default-universe.jpg")"
+                                     alt="Default universe image"
+                                     class="img-fluid rounded"
+                                     style="width: 100%; max-height: 300px; object-fit: cover;" />
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="coverImage">Change cover image</label>
+                            <input type="file"
+                                   name="coverImage"
+                                   id="coverImage"
+                                   class="form-control" />
+                        </div>
+
+                        <small class="text-muted">
+                            Allowed formats: JPG, JPEG, PNG, WEBP. Max size: 5 MB.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="form-group mb-3">
+                            <label for="name">Universe name</label>
+                            <input type="text"
+                                   name="name"
+                                   id="name"
+                                   class="form-control"
+                                   value="@Model.name" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description">Description</label>
+                            <textarea name="description"
+                                      id="description"
+                                      class="form-control"
+                                      rows="8">@Model.description</textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="tagsText">Tags</label>
+                            <input type="text"
+                                   name="tagsText"
+                                   id="tagsText"
+                                   class="form-control"
+                                   value="@ViewBag.TagsText"
+                                   placeholder="fantasy, magic, dragons" />
+
+                            <small class="text-muted">
+                                Separate tags with commas.
+                            </small>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="visibility">Visibility</label>
+                            <select name="visibility"
+                                    id="visibility"
+                                    class="form-control">
+                                <option value="public" @(Model.visibility == "public" ? "selected" : "")>
+                                    Public
+                                </option>
+                                <option value="private" @(Model.visibility == "private" ? "selected" : "")>
+                                    Private
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = Model.universe_id },
+                    new { @class = "btn btn-secondary" }
+                )
+            </div>
+
+        </div>
+    }
+
+</div>

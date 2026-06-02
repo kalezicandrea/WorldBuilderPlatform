@@ -1,0 +1,69 @@
+﻿@model WorldBuilderPlatform.Character
+
+@{
+    ViewBag.Title = "Edit Character";
+}
+
+<h2>Edit Character</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+@using (Html.BeginForm("Edit", "Characters", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="id" value="@Model.character_id" />
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Character information</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <label>Name</label>
+                <input type="text" name="name" value="@Model.name" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Gender</label>
+                <input type="text" name="gender" value="@Model.gender" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Species</label>
+                <input type="text" name="speciesName" value="@ViewBag.SpeciesName" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Species description</label>
+                <textarea name="speciesDescription" class="form-control" rows="4">@ViewBag.SpeciesDescription</textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Character description</label>
+                <textarea name="description" class="form-control" rows="8">@Model.description</textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Change main image</label>
+                <input type="file" name="mainImage" class="form-control" />
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+
+            @Html.ActionLink(
+                "Cancel",
+                "Details",
+                "Universes",
+                new { id = Model.universe_id },
+                new { @class = "btn btn-secondary" }
+            )
+        </div>
+    </div>
+}

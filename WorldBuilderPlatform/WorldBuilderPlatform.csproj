@@ -155,8 +155,14 @@
       <DependentUpon>WorldBuilderModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CharacterRelationshipsController.cs" />
+    <Compile Include="Controllers\CharactersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
+    <Compile Include="Controllers\StorySegmentsController.cs" />
     <Compile Include="Controllers\UniversesController.cs" />
+    <Compile Include="Controllers\WorldImagesController.cs" />
     <Compile Include="FavoriteUniverse.cs">
       <DependentUpon>WorldBuilderModel.tt</DependentUpon>
     </Compile>
@@ -276,9 +282,30 @@
     <Content Include="Views\Universes\Details.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Universes\Create.cshtml" />
+    <Content Include="Views\Characters\Create.cshtml" />
+    <Content Include="Views\StorySegments\Create.cshtml" />
+    <Content Include="Views\Locations\Create.cshtml" />
+    <Content Include="Views\WorldImages\Create.cshtml" />
+    <Content Include="Views\CharacterRelationships\Create.cshtml" />
+    <Content Include="Views\CharacterRelationships\Edit.cshtml" />
+    <Content Include="Views\CharacterRelationships\Delete.cshtml" />
+    <Content Include="Views\Universes\Edit.cshtml" />
+    <Content Include="Views\Universes\Delete.cshtml" />
+    <Content Include="Views\StorySegments\Edit.cshtml" />
+    <Content Include="Views\StorySegments\Delete.cshtml" />
+    <Content Include="Views\Characters\Edit.cshtml" />
+    <Content Include="Views\Characters\Delete.cshtml" />
+    <Content Include="Views\Locations\Edit.cshtml" />
+    <Content Include="Views\Locations\Delete.cshtml" />
+    <Content Include="Views\WorldImages\Edit.cshtml" />
+    <Content Include="Views\WorldImages\Delete.cshtml" />
+    <Content Include="Views\Reviews\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\ImagesDesign\" />
+    <Folder Include="Content\Uploaded\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

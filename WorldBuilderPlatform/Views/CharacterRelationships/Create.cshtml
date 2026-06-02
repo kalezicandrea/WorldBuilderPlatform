@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "Create Character Relationship";
+
+    var characters = ViewBag.Characters;
+}
+
+<div class="container mt-4">
+
+    <h2>Create Character Relationship</h2>
+
+    <p class="text-muted">
+        Universe: @ViewBag.UniverseName
+    </p>
+
+    <hr />
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "CharacterRelationships", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="universeId" value="@ViewBag.UniverseId" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Relationship information</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-group mb-3">
+                    <label for="characterId1">First character</label>
+
+                    <select name="characterId1" id="characterId1" class="form-control">
+                        @foreach (var character in characters)
+                        {
+                            <option value="@character.character_id">
+                                @character.name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="relationType">Relationship type</label>
+
+                    <input type="text"
+                           name="relationType"
+                           id="relationType"
+                           class="form-control"
+                           placeholder="friend, enemy, sibling, parent..." />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="characterId2">Second character</label>
+
+                    <select name="characterId2" id="characterId2" class="form-control">
+                        @foreach (var character in characters)
+                        {
+                            <option value="@character.character_id">
+                                @character.name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Create Relationship
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = ViewBag.UniverseId },
+                    new { @class = "btn btn-secondary" }
+                )
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@section scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const firstSelect = document.getElementById("character_id_1");
+            const secondSelect = document.getElementById("character_id_2");
+
+            function selectFirstVisibleOption(selectElement) {
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    const option = selectElement.options[i];
+
+                    if (!option.hidden && option.value !== "") {
+                        selectElement.selectedIndex = i;
+                        return;
+                    }
+                }
+            }
+
+            function updateDropdowns() {
+                const firstValue = firstSelect.value;
+                const secondValue = secondSelect.value;
+
+                Array.from(firstSelect.options).forEach(function (option) {
+                    if (option.value === "") {
+                        option.hidden = false;
+                    } else {
+                        option.hidden = option.value === secondValue;
+                    }
+                });
+
+                Array.from(secondSelect.options).forEach(function (option) {
+                    if (option.value === "") {
+                        option.hidden = false;
+                    } else {
+                        option.hidden = option.value === firstValue;
+                    }
+                });
+
+                if (firstSelect.options[firstSelect.selectedIndex].hidden) {
+                    selectFirstVisibleOption(firstSelect);
+                }
+
+                if (secondSelect.options[secondSelect.selectedIndex].hidden) {
+                    selectFirstVisibleOption(secondSelect);
+                }
+            }
+
+            firstSelect.addEventListener("change", updateDropdowns);
+            secondSelect.addEventListener("change", updateDropdowns);
+
+            updateDropdowns();
+        });
+    </script>
+}
