@@ -11,7 +11,33 @@ namespace WorldBuilderPlatform.Controllers
     {
         private WorldBuilderPlatformDBEntities db = new WorldBuilderPlatformDBEntities();
 
-        // GET: Characters/Create?universeId=1
+        private bool CanEditUniverse(int universeId)
+        {
+            if (Session["user_id"] == null)
+            {
+                return false;
+            }
+
+            var universe = db.Universes.FirstOrDefault(u => u.universe_id == universeId);
+
+            if (universe == null)
+            {
+                return false;
+            }
+
+            int currentUserId = (int)Session["user_id"];
+
+            bool isOwner = universe.owner_id == currentUserId;
+            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
+
+            return isOwner || isAdmin;
+        }
+
+        private bool IsValidGender(string gender)
+        {
+            return gender == "Male" || gender == "Female" || gender == "Other";
+        }
+
         public ActionResult Create(int universeId)
         {
             if (Session["user_id"] == null)
@@ -26,12 +52,7 @@ namespace WorldBuilderPlatform.Controllers
                 return HttpNotFound();
             }
 
-            int currentUserId = (int)Session["user_id"];
-
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
-
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(universeId))
             {
                 return RedirectToAction("Details", "Universes", new { id = universeId });
             }
@@ -42,7 +63,6 @@ namespace WorldBuilderPlatform.Controllers
             return View();
         }
 
-        // POST: Characters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
@@ -66,12 +86,7 @@ namespace WorldBuilderPlatform.Controllers
                 return HttpNotFound();
             }
 
-            int currentUserId = (int)Session["user_id"];
-
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
-
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(universeId))
             {
                 return RedirectToAction("Details", "Universes", new { id = universeId });
             }
@@ -81,8 +96,51 @@ namespace WorldBuilderPlatform.Controllers
                 ViewBag.Error = "Character name is required.";
                 ViewBag.UniverseId = universeId;
                 ViewBag.UniverseName = universe.name;
+                ViewBag.Name = name;
+                ViewBag.Gender = gender;
+                ViewBag.SpeciesName = speciesName;
+                ViewBag.SpeciesDescription = speciesDescription;
+                ViewBag.Description = description;
 
                 return View();
+            }
+
+            if (!IsValidGender(gender))
+            {
+                ViewBag.Error = "Please choose a valid gender.";
+                ViewBag.UniverseId = universeId;
+                ViewBag.UniverseName = universe.name;
+                ViewBag.Name = name;
+                ViewBag.Gender = gender;
+                ViewBag.SpeciesName = speciesName;
+                ViewBag.SpeciesDescription = speciesDescription;
+                ViewBag.Description = description;
+
+                return View();
+            }
+
+            int? speciesId = null;
+
+            if (!string.IsNullOrWhiteSpace(speciesName))
+            {
+                var species = db.Species.FirstOrDefault(s =>
+                    s.universe_id == universeId &&
+                    s.name == speciesName);
+
+                if (species == null)
+                {
+                    species = new Species
+                    {
+                        name = speciesName,
+                        description = speciesDescription,
+                        universe_id = universeId
+                    };
+
+                    db.Species.Add(species);
+                    db.SaveChanges();
+                }
+
+                speciesId = species.species_id;
             }
 
             string mainImgUrl = null;
@@ -98,6 +156,11 @@ namespace WorldBuilderPlatform.Controllers
                     ViewBag.Error = "Only JPG, JPEG, PNG and WEBP images are allowed.";
                     ViewBag.UniverseId = universeId;
                     ViewBag.UniverseName = universe.name;
+                    ViewBag.Name = name;
+                    ViewBag.Gender = gender;
+                    ViewBag.SpeciesName = speciesName;
+                    ViewBag.SpeciesDescription = speciesDescription;
+                    ViewBag.Description = description;
 
                     return View();
                 }
@@ -109,12 +172,16 @@ namespace WorldBuilderPlatform.Controllers
                     ViewBag.Error = "Image size must be less than 5 MB.";
                     ViewBag.UniverseId = universeId;
                     ViewBag.UniverseName = universe.name;
+                    ViewBag.Name = name;
+                    ViewBag.Gender = gender;
+                    ViewBag.SpeciesName = speciesName;
+                    ViewBag.SpeciesDescription = speciesDescription;
+                    ViewBag.Description = description;
 
                     return View();
                 }
 
                 string fileName = Guid.NewGuid().ToString() + extension;
-
                 string folderPath = Server.MapPath("~/Content/Uploaded/Characters/");
 
                 if (!Directory.Exists(folderPath))
@@ -129,16 +196,18 @@ namespace WorldBuilderPlatform.Controllers
                 mainImgUrl = "/Content/Uploaded/Characters/" + fileName;
             }
 
-            db.Database.ExecuteSqlCommand(
-                "EXEC sp_CreateCharacterWithSpecies @universe_id, @name, @gender, @species_name, @species_description, @description, @main_img_url",
-                new SqlParameter("@universe_id", universeId),
-                new SqlParameter("@name", name),
-                new SqlParameter("@gender", string.IsNullOrWhiteSpace(gender) ? (object)DBNull.Value : gender),
-                new SqlParameter("@species_name", string.IsNullOrWhiteSpace(speciesName) ? (object)DBNull.Value : speciesName),
-                new SqlParameter("@species_description", string.IsNullOrWhiteSpace(speciesDescription) ? (object)DBNull.Value : speciesDescription),
-                new SqlParameter("@description", string.IsNullOrWhiteSpace(description) ? (object)DBNull.Value : description),
-                new SqlParameter("@main_img_url", string.IsNullOrWhiteSpace(mainImgUrl) ? (object)DBNull.Value : mainImgUrl)
-            );
+            var character = new Character
+            {
+                name = name,
+                gender = gender,
+                description = description,
+                main_img_url = mainImgUrl,
+                universe_id = universeId,
+                species_id = speciesId
+            };
+
+            db.Characters.Add(character);
+            db.SaveChanges();
 
             return RedirectToAction("Details", "Universes", new { id = universeId });
         }
@@ -159,11 +228,12 @@ namespace WorldBuilderPlatform.Controllers
 
             var universe = db.Universes.FirstOrDefault(u => u.universe_id == character.universe_id);
 
-            int currentUserId = (int)Session["user_id"];
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
+            if (universe == null)
+            {
+                return HttpNotFound();
+            }
 
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(character.universe_id))
             {
                 return RedirectToAction("Details", "Universes", new { id = character.universe_id });
             }
@@ -201,11 +271,12 @@ namespace WorldBuilderPlatform.Controllers
 
             var universe = db.Universes.FirstOrDefault(u => u.universe_id == character.universe_id);
 
-            int currentUserId = (int)Session["user_id"];
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
+            if (universe == null)
+            {
+                return HttpNotFound();
+            }
 
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(character.universe_id))
             {
                 return RedirectToAction("Details", "Universes", new { id = character.universe_id });
             }
@@ -217,6 +288,18 @@ namespace WorldBuilderPlatform.Controllers
                 ViewBag.UniverseName = universe.name;
                 ViewBag.SpeciesName = speciesName;
                 ViewBag.SpeciesDescription = speciesDescription;
+
+                return View(character);
+            }
+
+            if (!IsValidGender(gender))
+            {
+                ViewBag.Error = "Please choose a valid gender.";
+                ViewBag.UniverseId = character.universe_id;
+                ViewBag.UniverseName = universe.name;
+                ViewBag.SpeciesName = speciesName;
+                ViewBag.SpeciesDescription = speciesDescription;
+
                 return View(character);
             }
 
@@ -247,6 +330,7 @@ namespace WorldBuilderPlatform.Controllers
             if (mainImage != null && mainImage.ContentLength > 0)
             {
                 string extension = Path.GetExtension(mainImage.FileName).ToLower();
+
                 string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
 
                 if (!allowedExtensions.Contains(extension))
@@ -256,6 +340,7 @@ namespace WorldBuilderPlatform.Controllers
                     ViewBag.UniverseName = universe.name;
                     ViewBag.SpeciesName = speciesName;
                     ViewBag.SpeciesDescription = speciesDescription;
+
                     return View(character);
                 }
 
@@ -268,6 +353,7 @@ namespace WorldBuilderPlatform.Controllers
                     ViewBag.UniverseName = universe.name;
                     ViewBag.SpeciesName = speciesName;
                     ViewBag.SpeciesDescription = speciesDescription;
+
                     return View(character);
                 }
 
@@ -280,6 +366,7 @@ namespace WorldBuilderPlatform.Controllers
                 }
 
                 string filePath = Path.Combine(folderPath, fileName);
+
                 mainImage.SaveAs(filePath);
 
                 character.main_img_url = "/Content/Uploaded/Characters/" + fileName;
@@ -311,11 +398,12 @@ namespace WorldBuilderPlatform.Controllers
 
             var universe = db.Universes.FirstOrDefault(u => u.universe_id == character.universe_id);
 
-            int currentUserId = (int)Session["user_id"];
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
+            if (universe == null)
+            {
+                return HttpNotFound();
+            }
 
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(character.universe_id))
             {
                 return RedirectToAction("Details", "Universes", new { id = character.universe_id });
             }
@@ -327,6 +415,11 @@ namespace WorldBuilderPlatform.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["user_id"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var character = db.Characters.FirstOrDefault(c => c.character_id == id);
 
             if (character == null)
@@ -336,18 +429,7 @@ namespace WorldBuilderPlatform.Controllers
 
             int universeId = character.universe_id;
 
-            var universe = db.Universes.FirstOrDefault(u => u.universe_id == universeId);
-
-            if (Session["user_id"] == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            int currentUserId = (int)Session["user_id"];
-            bool isOwner = universe.owner_id == currentUserId;
-            bool isAdmin = Session["role_id"] != null && (int)Session["role_id"] == 1;
-
-            if (!isOwner && !isAdmin)
+            if (!CanEditUniverse(universeId))
             {
                 return RedirectToAction("Details", "Universes", new { id = universeId });
             }
@@ -367,6 +449,5 @@ namespace WorldBuilderPlatform.Controllers
 
             return RedirectToAction("Details", "Universes", new { id = universeId });
         }
-
     }
 }

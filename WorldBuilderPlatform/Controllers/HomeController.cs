@@ -60,7 +60,6 @@ namespace WorldBuilderPlatform.Controllers
             }
             else if (isAdmin)
             {
-                // Admin sees all universes, including private ones.
             }
             else
             {
@@ -222,12 +221,12 @@ namespace WorldBuilderPlatform.Controllers
 
             ViewBag.AllTags = db.Tags.OrderBy(t => t.name).ToList();
 
-            ViewBag.AllGenders = db.Characters
-                .Where(c => c.gender != null && c.gender != "")
-                .Select(c => c.gender)
-                .Distinct()
-                .OrderBy(g => g)
-                .ToList();
+            ViewBag.AllGenders = new List<string>
+            {
+                "Male",
+                "Female",
+                "Other"
+            };
 
             ViewBag.AllSpecies = db.Species
                 .OrderBy(s => s.name)
@@ -237,9 +236,7 @@ namespace WorldBuilderPlatform.Controllers
 
             if (isAdmin)
             {
-
                 ViewBag.AllUsers = db.Users
-                    .Where(u => u.role_id != 1)
                     .OrderBy(u => u.username)
                     .ToList();
             }

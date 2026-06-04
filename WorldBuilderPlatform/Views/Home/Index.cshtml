@@ -24,9 +24,26 @@
     string selectedSort = ViewBag.SortBy as string ?? "newest";
 }
 
-<div class="home-page">
+<div class="sidebar-toggle-bar">
+    <button type="button"
+            id="toggleSearchSidebar"
+            class="btn btn-outline-primary btn-sm">
+        Toggle Search
+    </button>
 
-    <aside class="search-sidebar">
+    @if (isAdmin)
+    {
+        <button type="button"
+                id="toggleAdminSidebar"
+                class="btn btn-outline-secondary btn-sm">
+            Toggle Users
+        </button>
+    }
+</div>
+
+<div class="home-page" id="homePage">
+
+    <aside class="search-sidebar" id="searchSidebar">
 
         <h4>Search</h4>
 
@@ -68,36 +85,16 @@
 
             <hr />
 
-            if (Session["user_id"] != null)
+            if (ViewBag.MyUniverses == true)
             {
-                <div class="form-check mb-2">
-                    <input type="checkbox"
-                           name="myUniverses"
-                           value="true"
-                           class="form-check-input"
-                           id="myUniverses"
-                           @(ViewBag.MyUniverses == true ? "checked" : "") />
-
-                    <label class="form-check-label" for="myUniverses">
-                        My Universes
-                    </label>
-                </div>
-
-                <div class="form-check mb-3">
-                    <input type="checkbox"
-                           name="myFavorites"
-                           value="true"
-                           class="form-check-input"
-                           id="myFavorites"
-                           @(ViewBag.MyFavorites == true ? "checked" : "") />
-
-                    <label class="form-check-label" for="myFavorites">
-                        My Favorites
-                    </label>
-                </div>
+                <input type="hidden" name="myUniverses" value="true" />
             }
 
-            <hr />
+            if (ViewBag.MyFavorites == true)
+            {
+                <input type="hidden" name="myFavorites" value="true" />
+            }
+
 
             <div id="tagFilters">
                 <h5>Tags</h5>
@@ -184,17 +181,45 @@
                 Apply filters
             </button>
 
-            <a href="@Url.Action("Index", "Home")"
-               class="btn btn-secondary w-100 mt-2">
-                Clear filters
-            </a>
+            if (ViewBag.MyUniverses == true)
+            {
+                <a href="@Url.Action("Index", "Home", new { myUniverses = true })"
+                   class="btn btn-secondary w-100 mt-2">
+                    Clear filters
+                </a>
+            }
+            else if (ViewBag.MyFavorites == true)
+            {
+                <a href="@Url.Action("Index", "Home", new { myFavorites = true })"
+                   class="btn btn-secondary w-100 mt-2">
+                    Clear filters
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Home")"
+                   class="btn btn-secondary w-100 mt-2">
+                    Clear filters
+                </a>
+            }
         }
 
     </aside>
 
     <main class="home-results">
 
-        <h2>Explore Universes</h2>
+        @if (ViewBag.MyUniverses == true)
+        {
+            <h2>My Universes</h2>
+        }
+        else if (ViewBag.MyFavorites == true)
+        {
+            <h2>My Favorites</h2>
+        }
+        else
+        {
+            <h2>Explore Universes</h2>
+        }
 
         @if (!Model.Any())
         {
@@ -284,7 +309,7 @@
 
     @if (isAdmin)
     {
-        <aside class="admin-users-sidebar">
+        <aside class="admin-users-sidebar" id="adminUsersSidebar">
             <h4>Registered Users</h4>
 
             @if (allUsers == null || allUsers.Count == 0)
@@ -322,6 +347,22 @@
 @section scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const homePage = document.getElementById("homePage");
+            const toggleSearchSidebar = document.getElementById("toggleSearchSidebar");
+            const toggleAdminSidebar = document.getElementById("toggleAdminSidebar");
+
+            if (toggleSearchSidebar && homePage) {
+                toggleSearchSidebar.addEventListener("click", function () {
+                    homePage.classList.toggle("hide-search-sidebar");
+                });
+            }
+
+            if (toggleAdminSidebar && homePage) {
+                toggleAdminSidebar.addEventListener("click", function () {
+                    homePage.classList.toggle("hide-admin-sidebar");
+                });
+            }
+
             const categorySelect = document.getElementById("category");
             const tagFilters = document.getElementById("tagFilters");
             const characterFilters = document.getElementById("characterFilters");
@@ -342,9 +383,10 @@
                 }
             }
 
-            categorySelect.addEventListener("change", updateFilterVisibility);
-
-            updateFilterVisibility();
+            if (categorySelect && tagFilters && characterFilters) {
+                categorySelect.addEventListener("change", updateFilterVisibility);
+                updateFilterVisibility();
+            }
         });
     </script>
 }

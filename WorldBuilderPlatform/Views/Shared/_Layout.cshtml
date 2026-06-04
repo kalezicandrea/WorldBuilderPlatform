@@ -8,45 +8,108 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark world-navbar">
         <div class="container">
-            @Html.ActionLink("World Builder", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+
+            @Html.ActionLink(
+                "World Builder",
+                "Index",
+                "Home",
+                new { area = "" },
+                new { @class = "navbar-brand" }
+            )
+
+            <button type="button"
+                    class="navbar-toggler"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse"
+                    title="Toggle navigation"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
 
+            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+
+                <ul class="navbar-nav">
                     <li class="nav-item">
-                        @Html.ActionLink("Universes", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                        @Html.ActionLink(
+                            "Universes",
+                            "Index",
+                            "Home",
+                            new { area = "" },
+                            new { @class = "nav-link" }
+                        )
                     </li>
 
-                    @if (Session["user_id"] == null)
+                    @if (Session["user_id"] != null)
                     {
                         <li class="nav-item">
-                            @Html.ActionLink("Register", "Register", "Account", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(
+                                "My Universes",
+                                "Index",
+                                "Home",
+                                new { myUniverses = true },
+                                new { @class = "nav-link" }
+                            )
                         </li>
 
                         <li class="nav-item">
-                            @Html.ActionLink("Login", "Login", "Account", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(
+                                "My Favorites",
+                                "Index",
+                                "Home",
+                                new { myFavorites = true },
+                                new { @class = "nav-link" }
+                            )
+                        </li>
+                    }
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @if (Session["user_id"] == null)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink(
+                                "Register",
+                                "Register",
+                                "Account",
+                                new { area = "" },
+                                new { @class = "nav-link" }
+                            )
+                        </li>
+
+                        <li class="nav-item">
+                            @Html.ActionLink(
+                                "Login",
+                                "Login",
+                                "Account",
+                                new { area = "" },
+                                new { @class = "nav-link" }
+                            )
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <span class="nav-link">Hello, @Session["username"]</span>
+                            <span class="nav-link">
+                                Hello, @Session["username"]
+                            </span>
                         </li>
 
                         <li class="nav-item">
-                            @Html.ActionLink("Create Universe", "Create", "Universes", new { area = "" }, new { @class = "nav-link" })
-                        </li>
-
-                        <li class="nav-item">
-                            @Html.ActionLink("Logout", "Logout", "Account", new { area = "" }, new { @class = "nav-link" })
+                            @Html.ActionLink(
+                                "Logout",
+                                "Logout",
+                                "Account",
+                                new { area = "" },
+                                new { @class = "nav-link" }
+                            )
                         </li>
                     }
                 </ul>
+
             </div>
         </div>
     </nav>
@@ -58,5 +121,28 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+    document.addEventListener("mousedown", function (event) {
+        if (event.button !== 0) {
+            return;
+        }
+
+        const effect = document.createElement("img");
+
+        effect.src = "/Content/ImagesDesign/cursor-effect.gif?v=" + new Date().getTime();
+        effect.className = "click-effect";
+
+        effect.style.left = event.clientX + "px";
+        effect.style.top = event.clientY + "px";
+
+        document.body.appendChild(effect);
+
+        setTimeout(function () {
+            effect.remove();
+        }, 800);
+    });
+    </script>
+
 </body>
 </html>

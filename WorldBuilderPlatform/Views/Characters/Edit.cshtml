@@ -2,68 +2,146 @@
 
 @{
     ViewBag.Title = "Edit Character";
+
+    string selectedGender = Model.gender;
 }
 
-<h2>Edit Character</h2>
+<div class="container mt-4">
 
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
-}
+    <h2>Edit Character</h2>
 
-@using (Html.BeginForm("Edit", "Characters", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
+    <p class="text-muted">
+        Universe: @ViewBag.UniverseName
+    </p>
 
-    <input type="hidden" name="id" value="@Model.character_id" />
+    <hr />
 
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Character information</h4>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
         </div>
+    }
 
-        <div class="card-body">
-            <div class="form-group mb-3">
-                <label>Name</label>
-                <input type="text" name="name" value="@Model.name" class="form-control" />
+    @using (Html.BeginForm("Edit", "Characters", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.character_id" />
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <h4>Character information</h4>
             </div>
 
-            <div class="form-group mb-3">
-                <label>Gender</label>
-                <input type="text" name="gender" value="@Model.gender" class="form-control" />
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-4">
+
+                        <div class="mb-3">
+                            @if (!string.IsNullOrEmpty(Model.main_img_url))
+                            {
+                                <img src="@Model.main_img_url"
+                                     alt="@Model.name"
+                                     class="img-fluid rounded"
+                                     style="width: 100%; max-height: 330px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/ImagesDesign/default-character.jpg")"
+                                     alt="Default character image"
+                                     class="img-fluid rounded"
+                                     style="width: 100%; max-height: 330px; object-fit: cover;" />
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mainImage">Change main image</label>
+                            <input type="file"
+                                   name="mainImage"
+                                   id="mainImage"
+                                   class="form-control" />
+                        </div>
+
+                        <small class="text-muted">
+                            Allowed formats: JPG, JPEG, PNG, WEBP. Max size: 5 MB.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="form-group mb-3">
+                            <label for="name">Character name</label>
+                            <input type="text"
+                                   name="name"
+                                   id="name"
+                                   class="form-control"
+                                   value="@Model.name" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="gender">Gender</label>
+                            <select name="gender"
+                                    id="gender"
+                                    class="form-control">
+                                <option value="">Choose gender</option>
+                                <option value="Male" @(selectedGender == "Male" ? "selected" : "")>Male</option>
+                                <option value="Female" @(selectedGender == "Female" ? "selected" : "")>Female</option>
+                                <option value="Other" @(selectedGender == "Other" ? "selected" : "")>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="speciesName">Species</label>
+                            <input type="text"
+                                   name="speciesName"
+                                   id="speciesName"
+                                   class="form-control"
+                                   value="@ViewBag.SpeciesName"
+                                   placeholder="Human, Elf, Dragon..." />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="speciesDescription">Species description</label>
+                            <textarea name="speciesDescription"
+                                      id="speciesDescription"
+                                      class="form-control"
+                                      rows="4">@ViewBag.SpeciesDescription</textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description">Character description</label>
+                            <textarea name="description"
+                                      id="description"
+                                      class="form-control"
+                                      rows="8">@Model.description</textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="form-group mb-3">
-                <label>Species</label>
-                <input type="text" name="speciesName" value="@ViewBag.SpeciesName" class="form-control" />
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Universes",
+                    new { id = Model.universe_id },
+                    new { @class = "btn btn-secondary" }
+                )
             </div>
 
-            <div class="form-group mb-3">
-                <label>Species description</label>
-                <textarea name="speciesDescription" class="form-control" rows="4">@ViewBag.SpeciesDescription</textarea>
-            </div>
-
-            <div class="form-group mb-3">
-                <label>Character description</label>
-                <textarea name="description" class="form-control" rows="8">@Model.description</textarea>
-            </div>
-
-            <div class="form-group mb-3">
-                <label>Change main image</label>
-                <input type="file" name="mainImage" class="form-control" />
-            </div>
         </div>
+    }
 
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-
-            @Html.ActionLink(
-                "Cancel",
-                "Details",
-                "Universes",
-                new { id = Model.universe_id },
-                new { @class = "btn btn-secondary" }
-            )
-        </div>
-    </div>
-}
+</div>

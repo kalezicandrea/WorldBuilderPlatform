@@ -41,7 +41,7 @@
                             <img src="@Url.Content("~/Content/ImagesDesign/default-character.jpg")"
                                  alt="Default character image"
                                  class="img-fluid rounded"
-                                 style="width: 100%; max-height: 320px; object-fit: cover;" />
+                                 style="width: 100%; max-height: 330px; object-fit: cover;" />
                         </div>
 
                         <div class="form-group">
@@ -66,16 +66,20 @@
                                    name="name"
                                    id="name"
                                    class="form-control"
+                                   value="@ViewBag.Name"
                                    placeholder="Enter character name" />
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="gender">Gender</label>
-                            <input type="text"
-                                   name="gender"
-                                   id="gender"
-                                   class="form-control"
-                                   placeholder="Enter gender" />
+                            <select name="gender"
+                                    id="gender"
+                                    class="form-control">
+                                <option value="">Choose gender</option>
+                                <option value="Male" @(ViewBag.Gender == "Male" ? "selected" : "")>Male</option>
+                                <option value="Female" @(ViewBag.Gender == "Female" ? "selected" : "")>Female</option>
+                                <option value="Other" @(ViewBag.Gender == "Other" ? "selected" : "")>Other</option>
+                            </select>
                         </div>
 
                         <div class="form-group mb-3">
@@ -84,7 +88,8 @@
                                    name="speciesName"
                                    id="speciesName"
                                    class="form-control"
-                                   placeholder="Enter species, for example Human, Elf, Dragon..." />
+                                   value="@ViewBag.SpeciesName"
+                                   placeholder="Human, Elf, Dragon..." />
                         </div>
 
                         <div class="form-group mb-3">
@@ -93,7 +98,7 @@
                                       id="speciesDescription"
                                       class="form-control"
                                       rows="4"
-                                      placeholder="Describe this species..."></textarea>
+                                      placeholder="Describe this species...">@ViewBag.SpeciesDescription</textarea>
                         </div>
 
                         <div class="form-group mb-3">
@@ -102,7 +107,7 @@
                                       id="description"
                                       class="form-control"
                                       rows="8"
-                                      placeholder="Describe your character..."></textarea>
+                                      placeholder="Describe your character...">@ViewBag.Description</textarea>
                         </div>
 
                     </div>

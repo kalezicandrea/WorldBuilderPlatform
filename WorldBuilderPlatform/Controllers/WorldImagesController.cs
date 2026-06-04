@@ -11,7 +11,7 @@ namespace WorldBuilderPlatform.Controllers
     {
         private WorldBuilderPlatformDBEntities db = new WorldBuilderPlatformDBEntities();
 
-        // GET: WorldImages/Create?universeId=1
+
         public ActionResult Create(int universeId)
         {
             if (Session["user_id"] == null)
@@ -41,7 +41,6 @@ namespace WorldBuilderPlatform.Controllers
             return View();
         }
 
-        // POST: WorldImages/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(
